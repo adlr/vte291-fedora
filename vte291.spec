@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.37.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -20,6 +20,7 @@ BuildRequires:  vala-tools
 
 # initscripts creates the utmp group
 Requires:       initscripts
+Requires:       vte-profile
 
 %description
 VTE is a library implementing a terminal emulator widget for GTK+. VTE
@@ -36,6 +37,20 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+# vte-profile is deliberately not noarch to avoid having to obsolete a noarch
+# subpackage in the future when we get rid of the vte3 / vte291 split. Yum is
+# notoriously bad when handling noarch obsoletes and insists on installing both
+# of the multilib packages (i686 + x86_64) as the replacement.
+%package -n     vte-profile
+Summary:        Profile script for VTE terminal emulator library
+License:        GPLv3+
+# vte.sh was previously part of the vte3 package
+Conflicts:      vte3 < 0.36.1-3
+
+%description -n vte-profile
+The vte-profile package contains a profile.d script for the VTE terminal
+emulator library.
 
 %prep
 %setup -q -n vte-%{version}
@@ -56,10 +71,6 @@ make %{?_smp_mflags} V=1
 %install
 %make_install
 
-# Rename the profile script for parallel installability
-mv $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/vte.sh \
-   $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/vte-%{apiver}.sh
-
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %find_lang vte-%{apiver}
@@ -70,7 +81,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %files -f vte-%{apiver}.lang
 %doc COPYING NEWS README
-%{_sysconfdir}/profile.d/vte-%{apiver}.sh
 %{_libdir}/libvte-%{apiver}.so.0*
 %dir %{_libdir}/vte-%{apiver}
 %attr(2711,root,utmp) %{_libdir}/vte-%{apiver}/gnome-pty-helper
@@ -85,6 +95,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_datadir}/gtk-doc/
 %{_datadir}/vala/
 
+%files -n vte-profile
+%{_sysconfdir}/profile.d/vte.sh
+
 %changelog
+* Wed May 07 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.0-2
+- Split out a vte-profile subpackage that can be used with both vte291 / vte3
+
 * Tue May 06 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.0-1
 - Initial Fedora package, based on previous vte3 0.36 packaging
