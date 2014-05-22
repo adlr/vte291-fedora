@@ -65,6 +65,7 @@ LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now -pie" \
         --with-gtk=3.0 \
         --libexecdir=%{_libdir}/vte-%{apiver} \
         --disable-gtk-doc \
+        --enable-gnome-pty-helper \
         --enable-introspection
 make %{?_smp_mflags} V=1
 
