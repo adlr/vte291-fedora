@@ -1,8 +1,8 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.37.0
-Release:        2%{?dist}
+Version:        0.37.1
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -15,7 +15,6 @@ BuildRequires:  gettext
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  intltool
-BuildRequires:  ncurses-devel
 BuildRequires:  vala-tools
 
 # initscripts creates the utmp group
@@ -100,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed May 28 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.1-1
+- Update to 0.37.1
+
 * Wed May 07 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.0-2
 - Split out a vte-profile subpackage that can be used with both vte291 / vte3
 
