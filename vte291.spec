@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.37.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.2-2
+- Rebuilt for gobject-introspection 1.41.4
+
 * Tue Jun 24 2014 Richard Hughes <rhughes@redhat.com> - 0.37.2-1
 - Update to 0.37.2
 
