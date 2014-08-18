@@ -1,8 +1,8 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.37.2
-Release:        3%{?dist}
+Version:        0.37.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Aug 18 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.90-1
+- Update to 0.37.90
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.37.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
