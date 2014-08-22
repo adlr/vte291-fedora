@@ -26,9 +26,6 @@ VTE is a library implementing a terminal emulator widget for GTK+. VTE
 is mainly used in gnome-terminal, but can also be used to embed a
 console/terminal in games, editors, IDEs, etc.
 
-VTE supports Unicode and character set conversion, as well as emulating
-any terminal known to the system's terminfo database.
-
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
