@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.38.0
+Version:        0.38.1
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -96,6 +96,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Oct 13 2014 Kalev Lember <kalevlember@gmail.com> - 0.38.1-1
+- Update to 0.38.1
+
 * Sun Sep 14 2014 Kalev Lember <kalevlember@gmail.com> - 0.38.0-1
 - Update to 0.38.0
 
