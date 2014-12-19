@@ -1,8 +1,8 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.39.0
-Release:        2%{?dist}
+Version:        0.39.1
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -10,8 +10,6 @@ URL:            http://www.gnome.org/
 Source0:        http://download.gnome.org/sources/vte/0.39/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=688456
 Patch0:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=740929
-Patch1:         0001-widget-Do-not-leave-behind-a-zombie-child-when-closi.patch
 
 BuildRequires:  gettext
 BuildRequires:  gobject-introspection-devel
@@ -53,7 +51,6 @@ emulator library.
 %prep
 %setup -q -n vte-%{version}
 %patch0 -p1 -b .motion
-%patch1 -p1 -b .zombie
 
 %build
 CFLAGS="%optflags -fPIE -DPIE" \
@@ -99,6 +96,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Dec 19 2014 Richard Hughes <rhughes@redhat.com> - 0.39.1-1
+- Update to 0.39.1
+
 * Mon Dec 01 2014 Debarshi Ray <rishi@fedoraproject.org> - 0.39.0-2
 - Backport upstream patch to fix zombie shells (GNOME #740929)
 
