@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.39.1
+Version:        0.39.90
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -11,8 +11,12 @@ Source0:        http://download.gnome.org/sources/vte/0.39/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=688456
 Patch0:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
 
+# https://bugzilla.gnome.org/show_bug.cgi?id=711059
+Patch100:       vte291-command-notify.patch
+
 BuildRequires:  gettext
 BuildRequires:  gobject-introspection-devel
+BuildRequires:  gperf
 BuildRequires:  gtk3-devel
 BuildRequires:  intltool
 BuildRequires:  vala-tools
@@ -51,6 +55,7 @@ emulator library.
 %prep
 %setup -q -n vte-%{version}
 %patch0 -p1 -b .motion
+%patch100 -p1 -b .command-notify
 
 %build
 CFLAGS="%optflags -fPIE -DPIE" \
@@ -96,6 +101,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Feb 17 2015 Debarshi Ray <rishi@fedoraproject.org> - 0.39.90-1
+- Update to 0.39.90
+- Add command-notify patches
+
 * Fri Dec 19 2014 Richard Hughes <rhughes@redhat.com> - 0.39.1-1
 - Update to 0.39.1
 
