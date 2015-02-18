@@ -15,9 +15,10 @@ Patch0:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
 Patch100:       vte291-command-notify.patch
 
 BuildRequires:  gettext
+BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
-BuildRequires:  gtk3-devel
+BuildRequires:  pkgconfig(gtk+-3.0)
 BuildRequires:  intltool
 BuildRequires:  vala-tools
 
