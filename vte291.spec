@@ -1,8 +1,8 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.40.2
-Release:        2%{?dist}
+Version:        0.41.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -102,6 +102,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Sep 14 2015 Debarshi Ray <rishi@fedoraproject.org> - 0.41.90-1
+- Update to 0.41.90
+- Rebased downstream patches after the migration to C++
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.40.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
