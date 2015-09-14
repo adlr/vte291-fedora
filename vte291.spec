@@ -67,7 +67,6 @@ LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now -pie" \
         --with-gtk=3.0 \
         --libexecdir=%{_libdir}/vte-%{apiver} \
         --disable-gtk-doc \
-        --enable-gnome-pty-helper \
         --enable-introspection
 make %{?_smp_mflags} V=1
 
@@ -85,8 +84,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %files -f vte-%{apiver}.lang
 %doc COPYING NEWS README
 %{_libdir}/libvte-%{apiver}.so.0*
-%dir %{_libdir}/vte-%{apiver}
-%attr(2711,root,utmp) %{_libdir}/vte-%{apiver}/gnome-pty-helper
 %{_libdir}/girepository-1.0/
 
 %files devel
@@ -105,6 +102,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 * Mon Sep 14 2015 Debarshi Ray <rishi@fedoraproject.org> - 0.41.90-1
 - Update to 0.41.90
 - Rebased downstream patches after the migration to C++
+- gnome-pty-helper has been removed
 
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.40.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
