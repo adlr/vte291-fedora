@@ -1,13 +1,13 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.41.90
+Version:        0.42.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.40/vte-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vte/0.42/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=688456
 Patch0:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
 
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 0.42.0-1
+- Update to 0.42.0
+
 * Mon Sep 14 2015 Debarshi Ray <rishi@fedoraproject.org> - 0.41.90-1
 - Update to 0.41.90
 - Rebased downstream patches after the migration to C++
