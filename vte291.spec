@@ -81,7 +81,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %postun -p /sbin/ldconfig
 
 %files -f vte-%{apiver}.lang
-%doc COPYING NEWS README
+%license COPYING
+%doc NEWS README
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
 
@@ -100,6 +101,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %changelog
 * Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 0.42.0-1
 - Update to 0.42.0
+- Use license macro for COPYING
 
 * Mon Sep 14 2015 Debarshi Ray <rishi@fedoraproject.org> - 0.41.90-1
 - Update to 0.41.90
