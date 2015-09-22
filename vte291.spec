@@ -64,7 +64,6 @@ CXXFLAGS="$CFLAGS" \
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now -pie" \
 %configure \
         --disable-static \
-        --with-gtk=3.0 \
         --libexecdir=%{_libdir}/vte-%{apiver} \
         --disable-gtk-doc \
         --enable-introspection
