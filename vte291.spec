@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.42.0
+Version:        0.42.1
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed Oct 14 2015 Kalev Lember <klember@redhat.com> - 0.42.1-1
+- Update to 0.42.1
+
 * Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 0.42.0-1
 - Update to 0.42.0
 - Use license macro for COPYING
