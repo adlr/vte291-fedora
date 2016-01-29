@@ -60,7 +60,7 @@ emulator library.
 %patch100 -p1 -b .command-notify
 
 %build
-CFLAGS="%optflags -fPIE -DPIE" \
+CFLAGS="%optflags -fPIE -DPIE -Wno-nonnull" \
 CXXFLAGS="$CFLAGS" \
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now -pie" \
 %configure \
@@ -103,6 +103,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 * Fri Jan 29 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.0-1
 - Update to 0.43.0
 - Add BuildRequires on pkgconfig(libpcre2-8)
+- Disable -Wnonnull
 
 * Thu Jan 28 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.42.3-1
 - Update to 0.42.3
