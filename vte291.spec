@@ -8,8 +8,6 @@ Summary:        Terminal emulator library
 License:        LGPLv2+
 URL:            http://www.gnome.org/
 Source0:        http://download.gnome.org/sources/vte/0.42/vte-%{version}.tar.xz
-# https://bugzilla.gnome.org/show_bug.cgi?id=688456
-Patch0:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 Patch100:       vte291-command-notify.patch
@@ -56,7 +54,6 @@ emulator library.
 
 %prep
 %setup -q -n vte-%{version}
-%patch0 -p1 -b .motion
 %patch100 -p1 -b .command-notify
 
 %build
@@ -102,6 +99,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %changelog
 * Fri Jan 29 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.1-1
 - Update to 0.43.1
+- Drop upstreamed patch
 
 * Fri Jan 29 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.0-1
 - Update to 0.43.0
