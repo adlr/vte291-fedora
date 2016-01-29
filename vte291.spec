@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.42.3
+Version:        0.43.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -10,8 +10,6 @@ URL:            http://www.gnome.org/
 Source0:        http://download.gnome.org/sources/vte/0.42/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=688456
 Patch0:         0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=761097
-Patch1:         0001-emulation-Track-the-cursor-separately-for-the-two-sc.patch
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 Patch100:       vte291-command-notify.patch
@@ -58,7 +56,6 @@ emulator library.
 %prep
 %setup -q -n vte-%{version}
 %patch0 -p1 -b .motion
-%patch1 -p1 -b .track-two-screens
 %patch100 -p1 -b .command-notify
 
 %build
@@ -102,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Jan 29 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.0-1
+- Update to 0.43.0
+
 * Thu Jan 28 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.42.3-1
 - Update to 0.42.3
 - Backport upstream patch to fix disappearing lines (GNOME #761097)

@@ -1,4 +1,4 @@
-From ae33abe3ab357de1dc341841c435d7e3cd4fca8b Mon Sep 17 00:00:00 2001
+From 3f45cc2d9aefbcae8b6af9f2e1a276ba603a6e2b Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/3] emulation: Add sequences and signals for desktop
@@ -60,10 +60,10 @@ index 0276422ec6d4..2c35c685930a 100644
  VOID:STRING,UINT
  VOID:UINT,UINT
 diff --git a/src/vte.cc b/src/vte.cc
-index 701891ba93b3..7830319ea9a3 100644
+index 470163c7ac70..646154f701be 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -8906,6 +8906,9 @@ vte_terminal_finalize(GObject *object)
+@@ -9643,6 +9643,9 @@ vte_terminal_finalize(GObject *object)
  
  	remove_update_timeout (terminal);
  
@@ -73,7 +73,7 @@ index 701891ba93b3..7830319ea9a3 100644
  	/* discard title updates */
          g_free(terminal->pvt->window_title);
          g_free(terminal->pvt->window_title_changed);
-@@ -10638,6 +10641,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -11387,6 +11390,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
  	klass->child_exited = NULL;
  	klass->encoding_changed = NULL;
  	klass->char_size_changed = NULL;
@@ -81,7 +81,7 @@ index 701891ba93b3..7830319ea9a3 100644
  	klass->window_title_changed = NULL;
  	klass->icon_title_changed = NULL;
  	klass->selection_changed = NULL;
-@@ -10712,6 +10716,25 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -11461,6 +11465,25 @@ vte_terminal_class_init(VteTerminalClass *klass)
                       1, G_TYPE_INT);
  
          /**
@@ -107,7 +107,7 @@ index 701891ba93b3..7830319ea9a3 100644
           * VteTerminal::window-title-changed:
           * @vteterminal: the object which received the signal
           *
-@@ -12732,6 +12755,16 @@ need_processing (VteTerminal *terminal)
+@@ -13482,6 +13505,16 @@ need_processing (VteTerminal *terminal)
  	return _vte_incoming_chunks_length (terminal->pvt->incoming) != 0;
  }
  
@@ -124,7 +124,7 @@ index 701891ba93b3..7830319ea9a3 100644
  /* Emit an "icon-title-changed" signal. */
  static void
  vte_terminal_emit_icon_title_changed(VteTerminal *terminal)
-@@ -12779,6 +12812,11 @@ vte_terminal_emit_pending_signals(VteTerminal *terminal)
+@@ -13529,6 +13562,11 @@ vte_terminal_emit_pending_signals(VteTerminal *terminal)
  
  	vte_terminal_emit_adjustment_changed (terminal);
  
@@ -137,10 +137,10 @@ index 701891ba93b3..7830319ea9a3 100644
  		g_free (terminal->pvt->window_title);
  		terminal->pvt->window_title = terminal->pvt->window_title_changed;
 diff --git a/src/vte/vteterminal.h b/src/vte/vteterminal.h
-index dbe3ffed81ba..8b21635bea9e 100644
+index 857819f385d0..e5d4d9dc998f 100644
 --- a/src/vte/vteterminal.h
 +++ b/src/vte/vteterminal.h
-@@ -78,6 +78,7 @@ struct _VteTerminalClass {
+@@ -79,6 +79,7 @@ struct _VteTerminalClass {
  	void (*child_exited)(VteTerminal* terminal, int status);
  	void (*encoding_changed)(VteTerminal* terminal);
  	void (*char_size_changed)(VteTerminal* terminal, guint char_width, guint char_height);
@@ -148,7 +148,7 @@ index dbe3ffed81ba..8b21635bea9e 100644
  	void (*window_title_changed)(VteTerminal* terminal);
  	void (*icon_title_changed)(VteTerminal* terminal);
  	void (*selection_changed)(VteTerminal* terminal);
-@@ -111,7 +112,7 @@ struct _VteTerminalClass {
+@@ -112,7 +113,7 @@ struct _VteTerminalClass {
  	void (*bell)(VteTerminal* terminal);
  
          /* Padding for future expansion. */
@@ -158,10 +158,10 @@ index dbe3ffed81ba..8b21635bea9e 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index f2152e6a8853..8c4c87d73122 100644
+index 7573ada9aaf4..cdfb8761d1c6 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
-@@ -369,6 +369,11 @@ public:
+@@ -389,6 +389,11 @@ public:
  	gboolean cursor_moved_pending;
  	gboolean contents_changed_pending;
  
@@ -183,7 +183,7 @@ index ad5b6d99f938..287caa5b5928 100644
  "set-current-file-uri", VTE_SEQUENCE_HANDLER(vte_sequence_handler_set_current_file_uri)
 +"send-notification", VTE_SEQUENCE_HANDLER(vte_sequence_handler_send_notification)
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index bf76995165bb..59f091f166aa 100644
+index af27ff5ef277..368e6700caf8 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -2243,6 +2243,96 @@ vte_sequence_handler_return_terminal_id (VteTerminal *terminal, GValueArray *par
@@ -287,7 +287,7 @@ index bf76995165bb..59f091f166aa 100644
 2.5.0
 
 
-From d781b9be57a7d612558241a1712d1ad28c56de44 Mon Sep 17 00:00:00 2001
+From 391e5c57c07666476f8de883e4bf4a4a65c27aac Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/3] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -318,7 +318,7 @@ index 2d211caa2f17..1c0543bd9d26 100644
 2.5.0
 
 
-From 21df58de64837af0216926743fbb9b3a10f82dfc Mon Sep 17 00:00:00 2001
+From 77886ec3ddabc54ac06767a5a875beaa9704a9be Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/3] vteapp: Add a test for the notification-received signal
@@ -328,10 +328,10 @@ Subject: [PATCH 3/3] vteapp: Add a test for the notification-received signal
  1 file changed, 7 insertions(+)
 
 diff --git a/src/app.vala b/src/app.vala
-index aa8d312abbca..290657d9495d 100644
+index c233a488d1d7..6f7a7561271e 100644
 --- a/src/app.vala
 +++ b/src/app.vala
-@@ -102,6 +102,8 @@ class Window : Gtk.ApplicationWindow
+@@ -318,6 +318,8 @@ class Window : Gtk.ApplicationWindow
      if (App.Options.object_notifications)
        terminal.notify.connect(notify_cb);
  
@@ -339,8 +339,8 @@ index aa8d312abbca..290657d9495d 100644
 +
      /* Settings */
      if (App.Options.no_double_buffer)
-       terminal.set_double_buffered(true);
-@@ -511,6 +513,11 @@ class Window : Gtk.ApplicationWindow
+       terminal.set_double_buffered(false);
+@@ -748,6 +750,11 @@ class Window : Gtk.ApplicationWindow
      set_title(terminal.get_window_title());
    }
  
