@@ -16,6 +16,7 @@ Patch100:       vte291-command-notify.patch
 
 BuildRequires:  gettext
 BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(libpcre2-8) >= 10.00
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
 BuildRequires:  pkgconfig(gtk+-3.0)
@@ -101,6 +102,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %changelog
 * Fri Jan 29 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.0-1
 - Update to 0.43.0
+- Add BuildRequires on pkgconfig(libpcre2-8)
 
 * Thu Jan 28 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.42.3-1
 - Update to 0.42.3
