@@ -7,7 +7,7 @@ Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.42/vte-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vte/0.43/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 Patch100:       vte291-command-notify.patch
