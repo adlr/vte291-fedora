@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.43.90
+Version:        0.43.91
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -14,7 +14,6 @@ Patch100:       vte291-command-notify.patch
 
 BuildRequires:  gettext
 BuildRequires:  pkgconfig(gnutls)
-BuildRequires:  pkgconfig(libpcre2-8) >= 10.00
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
 BuildRequires:  pkgconfig(gtk+-3.0)
@@ -97,6 +96,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Mar 01 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.91-1
+- Update to 0.43.91
+- Remove BuildRequires on pkgconfig(libpcre2-8)
+
 * Tue Mar 01 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.90-1
 - Update to 0.43.90
 
