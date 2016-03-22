@@ -1,13 +1,13 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.43.92
+Version:        0.44.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.43/vte-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vte/0.44/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 Patch100:       vte291-command-notify.patch
@@ -96,6 +96,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Mar 22 2016 Kalev Lember <klember@redhat.com> - 0.44.0-1
+- Update to 0.44.0
+
 * Tue Mar 15 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.43.92-1
 - Update to 0.43.92
 
