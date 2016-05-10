@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.44.1
+Version:        0.44.2
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -23,6 +23,8 @@ BuildRequires:  vala-tools
 # initscripts creates the utmp group
 Requires:       initscripts
 Requires:       vte-profile
+
+Conflicts:      gnome-terminal < 3.20.1-2
 
 %description
 VTE is a library implementing a terminal emulator widget for GTK+. VTE
@@ -96,6 +98,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue May 10 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.44.2-1
+- Update to 0.44.2
+- Rebase downstream patches and undo unintentional ABI break
+
 * Mon Apr 11 2016 Debarshi Ray <rishi@fedoraproject.org> - 0.44.1-1
 - Update to 0.44.1
 
