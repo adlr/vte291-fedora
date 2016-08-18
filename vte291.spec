@@ -18,6 +18,7 @@ BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
 BuildRequires:  pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  intltool
 BuildRequires:  vala-tools
 
