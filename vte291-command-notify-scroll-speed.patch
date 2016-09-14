@@ -1,4 +1,4 @@
-From 1d5e6a56d15ed2244d91c14198fa7cd3984c0a48 Mon Sep 17 00:00:00 2001
+From 4f4d8b52b9e8db40513cb9b928218ae571e7ec79 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/6] emulation: Add sequences and signals for desktop
@@ -30,7 +30,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711059
  9 files changed, 137 insertions(+), 1 deletion(-)
 
 diff --git a/src/caps.cc b/src/caps.cc
-index 98e0621584cb..cc621b8c2f60 100644
+index 47571269b883..3e496ff33194 100644
 --- a/src/caps.cc
 +++ b/src/caps.cc
 @@ -255,6 +255,8 @@ const char _vte_xterm_capability_strings[] =
@@ -62,10 +62,10 @@ index 0276422ec6d4..2c35c685930a 100644
  VOID:STRING,UINT
  VOID:UINT,UINT
 diff --git a/src/vte.cc b/src/vte.cc
-index d77d1620a338..1ca18a5d0e2e 100644
+index 609d4e2e5d55..1c8cd2edc73e 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -8293,6 +8293,9 @@ VteTerminalPrivate::~VteTerminalPrivate()
+@@ -8292,6 +8292,9 @@ VteTerminalPrivate::~VteTerminalPrivate()
  
  	remove_update_timeout(this);
  
@@ -75,7 +75,7 @@ index d77d1620a338..1ca18a5d0e2e 100644
  	/* discard title updates */
          g_free(m_window_title);
          g_free(m_window_title_changed);
-@@ -10329,6 +10332,15 @@ VteTerminalPrivate::emit_pending_signals()
+@@ -10328,6 +10331,15 @@ VteTerminalPrivate::emit_pending_signals()
  
  	emit_adjustment_changed();
  
@@ -113,7 +113,7 @@ index 7836271db108..efed7bf5dab8 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index c9dbddcf4a33..f4c95d1fbd87 100644
+index 924b5a084dd3..a65a2a98b44a 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -657,6 +657,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
@@ -180,7 +180,7 @@ index cff2157cc0d0..31636f0bc56b 100644
          char* m_window_title;
          char* m_window_title_changed;
 diff --git a/src/vteseq-n.gperf b/src/vteseq-n.gperf
-index 5b9e0a6a2c4f..56a12e5a9e05 100644
+index f060c98200dd..b530e3194eac 100644
 --- a/src/vteseq-n.gperf
 +++ b/src/vteseq-n.gperf
 @@ -169,4 +169,5 @@ struct vteseq_n_struct {
@@ -294,7 +294,7 @@ index 2330939d8068..53ade2e3d4ad 100644
 2.7.4
 
 
-From 29c11b0b2da6aeca60cfdc99a6da90cf67b9abff Mon Sep 17 00:00:00 2001
+From 0779d12dc97b05959da0d73f34ad3e2907484224 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/6] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -325,7 +325,7 @@ index 2d211caa2f17..1c0543bd9d26 100644
 2.7.4
 
 
-From 0ac0bf2ef6c0d18506ca9357aa036b34aea670de Mon Sep 17 00:00:00 2001
+From cd48fc069c16f5128b21d3f0a4d24f53c4a12630 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/6] vteapp: Add a test for the notification-received signal
@@ -363,7 +363,7 @@ index 4fef74999693..0da18339ed58 100644
 2.7.4
 
 
-From ef9d5f59fe5a19772026f0b18f972cdb1bd25660 Mon Sep 17 00:00:00 2001
+From c1d1f4f1b754169af1c64875ad76533775575072 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Mon, 9 May 2016 12:48:46 +0200
 Subject: [PATCH 4/6] Fix the order of vfunc pointers in VteTerminalClass to
@@ -399,7 +399,7 @@ index efed7bf5dab8..f514c3b227f9 100644
 2.7.4
 
 
-From b96ba21cad4f10d19f7b2745aeef4caacbce8968 Mon Sep 17 00:00:00 2001
+From 2e4a7740e70f755fe5635262691f6c26f68b9e0b Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 5/6] Add a property to configure the scroll speed
@@ -430,10 +430,10 @@ index 56ae7754491d..58ce6c2c5c23 100644
  vte_terminal_set_font
  vte_terminal_get_font
 diff --git a/src/vte.cc b/src/vte.cc
-index 1ca18a5d0e2e..4fedd7cdb915 100644
+index 1c8cd2edc73e..20dc6fb82e88 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -9612,6 +9612,7 @@ void
+@@ -9611,6 +9611,7 @@ void
  VteTerminalPrivate::widget_scroll(GdkEventScroll *event)
  {
  	gdouble delta_x, delta_y;
@@ -441,7 +441,7 @@ index 1ca18a5d0e2e..4fedd7cdb915 100644
  	gdouble v;
  	gint cnt, i;
  	int button;
-@@ -9665,7 +9666,13 @@ VteTerminalPrivate::widget_scroll(GdkEventScroll *event)
+@@ -9664,7 +9665,13 @@ VteTerminalPrivate::widget_scroll(GdkEventScroll *event)
  		return;
  	}
  
@@ -456,7 +456,7 @@ index 1ca18a5d0e2e..4fedd7cdb915 100644
  	_vte_debug_print(VTE_DEBUG_EVENTS,
  			"Scroll speed is %d lines per non-smooth scroll unit\n",
  			(int) v);
-@@ -9882,6 +9889,16 @@ VteTerminalPrivate::decscusr_cursor_shape()
+@@ -9881,6 +9888,16 @@ VteTerminalPrivate::decscusr_cursor_shape()
  }
  
  bool
@@ -489,7 +489,7 @@ index f514c3b227f9..89c267555cf9 100644
  _VTE_PUBLIC
  void vte_terminal_set_scrollback_lines(VteTerminal *terminal,
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index f4c95d1fbd87..0733a251490d 100644
+index a65a2a98b44a..20d36449368c 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -464,6 +464,9 @@ vte_terminal_get_property (GObject *object,
@@ -534,7 +534,7 @@ index f4c95d1fbd87..0733a251490d 100644
           * VteTerminal:scrollback-lines:
           *
           * The length of the scrollback buffer used by the terminal.  The size of
-@@ -3445,6 +3466,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
+@@ -3448,6 +3469,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
  }
  
  /**
@@ -601,7 +601,7 @@ index 31636f0bc56b..e38176cb3ff5 100644
 2.7.4
 
 
-From 2f9af10771a4bc4a47d85a3189dc30a99f6b69f4 Mon Sep 17 00:00:00 2001
+From 3b2d52fdc61b89e88e65e90f08965e903d2edc08 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 6/6] vteapp: Add a test for the scroll-speed property
