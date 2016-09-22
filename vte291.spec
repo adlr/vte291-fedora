@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.46.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -20,7 +20,7 @@ BuildRequires:  gperf
 BuildRequires:  pkgconfig(gtk+-3.0)
 BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  intltool
-BuildRequires:  vala-tools
+BuildRequires:  vala
 
 # initscripts creates the utmp group
 Requires:       initscripts
@@ -100,6 +100,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Sep 22 2016 Kalev Lember <klember@redhat.com> - 0.46.0-2
+- BR vala instead of obsolete vala-tools subpackage
+
 * Mon Sep 19 2016 Kalev Lember <klember@redhat.com> - 0.46.0-1
 - Update to 0.46.0
 
