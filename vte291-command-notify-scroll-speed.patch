@@ -1,4 +1,4 @@
-From b9ca9ebfcb6ba42c7bfb2b324d06db52319b403c Mon Sep 17 00:00:00 2001
+From 21e8a3a29620b3f0ef75e2b30d59207c4ec87cb5 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/5] Add sequences and signals for desktop notification
@@ -29,10 +29,10 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711059
  9 files changed, 138 insertions(+), 1 deletion(-)
 
 diff --git a/src/caps.cc b/src/caps.cc
-index 47571269b883..3e496ff33194 100644
+index 3c3fd659ba56..3d544ea84c06 100644
 --- a/src/caps.cc
 +++ b/src/caps.cc
-@@ -255,6 +255,8 @@ const char _vte_xterm_capability_strings[] =
+@@ -256,6 +256,8 @@ const char _vte_xterm_capability_strings[] =
          ENTRY(OSC "118" BEL, "reset-tek-cursor-color")
          ENTRY(OSC "119" BEL, "reset-highlight-foreground-color")
          ENTRY(OSC "777;%s" BEL, "urxvt-777")
@@ -41,7 +41,7 @@ index 47571269b883..3e496ff33194 100644
          ENTRY(OSC "1337;%s" BEL, "iterm2-1337")
  
          COMMENT(/* Set text parameters, ST-terminated versions. */)
-@@ -292,6 +294,8 @@ const char _vte_xterm_capability_strings[] =
+@@ -294,6 +296,8 @@ const char _vte_xterm_capability_strings[] =
          ENTRY(OSC "118" ST, "reset-tek-cursor-color")
          ENTRY(OSC "119" ST, "reset-highlight-foreground-color")
          ENTRY(OSC "777;%s" ST, "urxvt-777")
@@ -107,7 +107,7 @@ index 3b22c4a5980a..9ab32aef1a45 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 21282e1e006b..8457937fb305 100644
+index 02479500da0a..545e34efb90f 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -658,6 +658,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
@@ -174,17 +174,17 @@ index ff5b93c2634e..ed88c90c35b0 100644
          char* m_window_title;
          char* m_window_title_changed;
 diff --git a/src/vteseq-n.gperf b/src/vteseq-n.gperf
-index 573f045178ce..34fff99ccaca 100644
+index 3e60835188e4..37ff45aa0893 100644
 --- a/src/vteseq-n.gperf
 +++ b/src/vteseq-n.gperf
-@@ -170,4 +170,5 @@ struct vteseq_n_struct {
- "set-current-directory-uri", VTE_SEQUENCE_HANDLER(vte_sequence_handler_set_current_directory_uri)
+@@ -171,4 +171,5 @@ struct vteseq_n_struct {
  "set-current-file-uri", VTE_SEQUENCE_HANDLER(vte_sequence_handler_set_current_file_uri)
+ "set-current-hyperlink", VTE_SEQUENCE_HANDLER(vte_sequence_handler_set_current_hyperlink)
  "urxvt-777", VTE_SEQUENCE_HANDLER(vte_sequence_handler_urxvt_777)
 +"send-notification", VTE_SEQUENCE_HANDLER(vte_sequence_handler_send_notification)
  "iterm2-1337", VTE_SEQUENCE_HANDLER(vte_sequence_handler_iterm2_1337)
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index 25e697b8c1d8..d68605a2d843 100644
+index a8e66fe5b820..5ff2648750ae 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -2322,6 +2322,96 @@ vte_sequence_handler_return_terminal_id (VteTerminalPrivate *that, GValueArray *
@@ -285,10 +285,10 @@ index 25e697b8c1d8..d68605a2d843 100644
  static void
  vte_sequence_handler_send_secondary_device_attributes (VteTerminalPrivate *that, GValueArray *params)
 -- 
-2.9.3
+2.12.2
 
 
-From 8583a49765b915dd909d398d9e6a32f86a151bea Mon Sep 17 00:00:00 2001
+From c84eded2a1c168d1871b9b4a6c0a7241614140ad Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/5] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -316,10 +316,10 @@ index 2d211caa2f17..1c0543bd9d26 100644
  
  case "$TERM" in
 -- 
-2.9.3
+2.12.2
 
 
-From aefa2ac24d6f1e02f3a4cac97999a4e923e6e1ab Mon Sep 17 00:00:00 2001
+From 1d540eb15d004e49a261e73f37b7cb266c8686e1 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/5] vteapp: Add a test for the notification-received signal
@@ -354,10 +354,10 @@ index 58698f92fc10..464a02a00230 100644
  
  class App : Gtk.Application
 -- 
-2.9.3
+2.12.2
 
 
-From 84d0d66decc232e2a794df586f7e331f959e70f1 Mon Sep 17 00:00:00 2001
+From fa13a54e3f912cc937df3ae666324c87dcda3ae1 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 4/5] Add a property to configure the scroll speed
@@ -447,7 +447,7 @@ index 9ab32aef1a45..e83502a85c9c 100644
  _VTE_PUBLIC
  void vte_terminal_set_scrollback_lines(VteTerminal *terminal,
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 8457937fb305..d173412d0547 100644
+index 545e34efb90f..ad4a3ba3ef60 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -465,6 +465,9 @@ vte_terminal_get_property (GObject *object,
@@ -492,7 +492,7 @@ index 8457937fb305..d173412d0547 100644
           * VteTerminal:scrollback-lines:
           *
           * The length of the scrollback buffer used by the terminal.  The size of
-@@ -3638,6 +3659,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
+@@ -3641,6 +3662,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
  }
  
  /**
@@ -556,10 +556,10 @@ index ed88c90c35b0..6a90b7f14c98 100644
          bool set_scroll_on_keystroke(bool scroll);
          bool set_scroll_on_output(bool scroll);
 -- 
-2.9.3
+2.12.2
 
 
-From f91fd151d4b1e789e977c42f73edd4f653f470f7 Mon Sep 17 00:00:00 2001
+From 0277e287e7f10937d192ca7718f332a12cc3fd3a Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 5/5] vteapp: Add a test for the scroll-speed property
@@ -599,5 +599,5 @@ index 464a02a00230..31b10aef55d2 100644
          "Specify the number of scrollback-lines", null },
        { "transparent", 'T', 0, OptionArg.INT, ref transparency_percent,
 -- 
-2.9.3
+2.12.2
 
