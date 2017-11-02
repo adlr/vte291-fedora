@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.50.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -100,6 +100,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Nov 02 2017 Kalev Lember <klember@redhat.com> - 0.50.2-2
+- Rebuild
+
 * Wed Nov 01 2017 Debarshi Ray <rishi@fedoraproject.org> - 0.50.2-1
 - Update to 0.50.2
 
