@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.50.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -77,9 +77,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %find_lang vte-%{apiver}
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files -f vte-%{apiver}.lang
 %license COPYING
@@ -100,6 +98,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Feb 08 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.50.2-3
+- Switch to %%ldconfig_scriptlets
+
 * Thu Nov 02 2017 Kalev Lember <klember@redhat.com> - 0.50.2-2
 - Rebuild
 
