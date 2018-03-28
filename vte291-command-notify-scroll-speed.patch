@@ -1,4 +1,4 @@
-From dba0e89e39aa86be61b09225cb39e0a8aeebb196 Mon Sep 17 00:00:00 2001
+From afb1b0cef6eb46b9880f0f951aa4f65e0f3a1d60 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/5] Add sequences and signals for desktop notification
@@ -17,39 +17,39 @@ https://phab.enlightenment.org/T1765
 
 https://bugzilla.gnome.org/show_bug.cgi?id=711059
 ---
- src/caps.cc           |  4 +++
+ src/caps-list.hh      |  4 +++
  src/marshal.list      |  1 +
  src/vte.cc            | 12 +++++++
  src/vte/vteterminal.h |  4 ++-
  src/vtegtk.cc         | 21 ++++++++++++
  src/vtegtk.hh         |  1 +
  src/vteinternal.hh    |  5 +++
- src/vteseq-n.gperf    |  1 +
- src/vteseq.cc         | 90 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 9 files changed, 138 insertions(+), 1 deletion(-)
+ src/vteseq-list.hh    |  1 +
+ src/vteseq.cc         | 92 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 9 files changed, 140 insertions(+), 1 deletion(-)
 
-diff --git a/src/caps.cc b/src/caps.cc
-index 1f9cd1ed19e3..7262aeb2b8e0 100644
---- a/src/caps.cc
-+++ b/src/caps.cc
-@@ -257,6 +257,8 @@ const char _vte_xterm_capability_strings[] =
-         ENTRY(OSC "119" BEL, "reset-highlight-foreground-color")
-         ENTRY(OSC "133;%s" BEL, "iterm2-133")
-         ENTRY(OSC "777;%s" BEL, "urxvt-777")
-+        ENTRY(OSC "777;%s;%s;%s" BEL, "send-notification")
-+        ENTRY(OSC "777;%s;%s" BEL, "send-notification")
-         ENTRY(OSC "1337;%s" BEL, "iterm2-1337")
+diff --git a/src/caps-list.hh b/src/caps-list.hh
+index cc75191638c6..0336a9dee525 100644
+--- a/src/caps-list.hh
++++ b/src/caps-list.hh
+@@ -248,6 +248,8 @@ static const vte_matcher_entry_t entries[] = {
+         ENTRY(OSC "119" BEL, reset_highlight_foreground_color),
+         ENTRY(OSC "133;%s" BEL, iterm2_133),
+         ENTRY(OSC "777;%s" BEL, urxvt_777),
++        ENTRY(OSC "777;%s;%s;%s" BEL, send_notification),
++        ENTRY(OSC "777;%s;%s" BEL, send_notification),
+         ENTRY(OSC "1337;%s" BEL, iterm2_1337),
  
-         COMMENT(/* Set text parameters, ST-terminated versions. */)
-@@ -296,6 +298,8 @@ const char _vte_xterm_capability_strings[] =
-         ENTRY(OSC "119" ST, "reset-highlight-foreground-color")
-         ENTRY(OSC "133;%s" ST, "iterm2-133")
-         ENTRY(OSC "777;%s" ST, "urxvt-777")
-+        ENTRY(OSC "777;%s;%s;%s" ST, "send-notification")
-+        ENTRY(OSC "777;%s;%s" ST, "send-notification")
-         ENTRY(OSC "1337;%s" ST, "iterm2-1337")
+         /* Set text parameters, ST_terminated versions. */
+@@ -287,6 +289,8 @@ static const vte_matcher_entry_t entries[] = {
+         ENTRY(OSC "119" ST, reset_highlight_foreground_color),
+         ENTRY(OSC "133;%s" ST, iterm2_133),
+         ENTRY(OSC "777;%s" ST, urxvt_777),
++        ENTRY(OSC "777;%s;%s;%s" ST, send_notification),
++        ENTRY(OSC "777;%s;%s" ST, send_notification),
+         ENTRY(OSC "1337;%s" ST, iterm2_1337),
  
-         COMMENT(/* These may be bogus, I can't find docs for them anywhere (#104154). */)
+         /* These may be bogus, I can't find docs for them anywhere (#104154). */
 diff --git a/src/marshal.list b/src/marshal.list
 index 1e4d0c1b6476..3385b4759713 100644
 --- a/src/marshal.list
@@ -62,10 +62,10 @@ index 1e4d0c1b6476..3385b4759713 100644
  VOID:STRING,UINT
  VOID:UINT,UINT
 diff --git a/src/vte.cc b/src/vte.cc
-index 6f28670c037b..8df17c4bc531 100644
+index 276895442de9..b9bcdf1d60a9 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -8553,6 +8553,9 @@ VteTerminalPrivate::~VteTerminalPrivate()
+@@ -8706,6 +8706,9 @@ VteTerminalPrivate::~VteTerminalPrivate()
  
  	remove_update_timeout(this);
  
@@ -75,7 +75,7 @@ index 6f28670c037b..8df17c4bc531 100644
  	/* discard title updates */
          g_free(m_window_title);
          g_free(m_window_title_changed);
-@@ -10634,6 +10637,15 @@ VteTerminalPrivate::emit_pending_signals()
+@@ -10966,6 +10969,15 @@ VteTerminalPrivate::emit_pending_signals()
  
  	emit_adjustment_changed();
  
@@ -92,7 +92,7 @@ index 6f28670c037b..8df17c4bc531 100644
                  really_changed = (g_strcmp0(m_window_title, m_window_title_changed) != 0);
  		g_free (m_window_title);
 diff --git a/src/vte/vteterminal.h b/src/vte/vteterminal.h
-index cfd5a911adbe..b3c6978f65d6 100644
+index b96999f3c144..6bb3ac658454 100644
 --- a/src/vte/vteterminal.h
 +++ b/src/vte/vteterminal.h
 @@ -104,8 +104,10 @@ struct _VteTerminalClass {
@@ -108,10 +108,10 @@ index cfd5a911adbe..b3c6978f65d6 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 18a4b1ba16e9..4ccc4ff9c0ef 100644
+index 83fdfc8ae113..eecb9c35e437 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
-@@ -679,6 +679,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -703,6 +703,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
  	klass->child_exited = NULL;
  	klass->encoding_changed = NULL;
  	klass->char_size_changed = NULL;
@@ -119,7 +119,7 @@ index 18a4b1ba16e9..4ccc4ff9c0ef 100644
  	klass->window_title_changed = NULL;
  	klass->icon_title_changed = NULL;
  	klass->selection_changed = NULL;
-@@ -754,6 +755,26 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -778,6 +779,26 @@ vte_terminal_class_init(VteTerminalClass *klass)
                               G_TYPE_NONE,
                               1, G_TYPE_INT);
  
@@ -147,7 +147,7 @@ index 18a4b1ba16e9..4ccc4ff9c0ef 100644
           * VteTerminal::window-title-changed:
           * @vteterminal: the object which received the signal
 diff --git a/src/vtegtk.hh b/src/vtegtk.hh
-index d1ade949b8ff..07c714e66093 100644
+index c49754ef38ee..126d29326f11 100644
 --- a/src/vtegtk.hh
 +++ b/src/vtegtk.hh
 @@ -56,6 +56,7 @@ enum {
@@ -159,10 +159,10 @@ index d1ade949b8ff..07c714e66093 100644
          LAST_SIGNAL
  };
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 0cd686b6adc2..f7faa7a52328 100644
+index 5d8731e00464..cdb6bcb0b230 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
-@@ -496,6 +496,11 @@ public:
+@@ -635,6 +635,11 @@ public:
          gboolean m_cursor_moved_pending;
          gboolean m_contents_changed_pending;
  
@@ -174,27 +174,28 @@ index 0cd686b6adc2..f7faa7a52328 100644
  	/* window name changes */
          char* m_window_title;
          char* m_window_title_changed;
-diff --git a/src/vteseq-n.gperf b/src/vteseq-n.gperf
-index 7cd1de50f8f0..e2cb3c90c86e 100644
---- a/src/vteseq-n.gperf
-+++ b/src/vteseq-n.gperf
-@@ -171,5 +171,6 @@ struct vteseq_n_struct {
- "set-current-file-uri", VTE_SEQUENCE_HANDLER(vte_sequence_handler_set_current_file_uri)
- "set-current-hyperlink", VTE_SEQUENCE_HANDLER(vte_sequence_handler_set_current_hyperlink)
- "urxvt-777", VTE_SEQUENCE_HANDLER(vte_sequence_handler_urxvt_777)
-+"send-notification", VTE_SEQUENCE_HANDLER(vte_sequence_handler_send_notification)
- "iterm2-133", VTE_SEQUENCE_HANDLER(vte_sequence_handler_iterm2_133)
- "iterm2-1337", VTE_SEQUENCE_HANDLER(vte_sequence_handler_iterm2_1337)
+diff --git a/src/vteseq-list.hh b/src/vteseq-list.hh
+index 1dda44862fb2..3781e7ac36b6 100644
+--- a/src/vteseq-list.hh
++++ b/src/vteseq-list.hh
+@@ -120,6 +120,7 @@ SEQUENCE_HANDLER(select_character_protection)
+ SEQUENCE_HANDLER(select_locator_events)
+ SEQUENCE_HANDLER(selective_erase_in_display)
+ SEQUENCE_HANDLER(selective_erase_in_line)
++SEQUENCE_HANDLER(send_notification)
+ SEQUENCE_HANDLER(send_primary_device_attributes)
+ SEQUENCE_HANDLER(send_secondary_device_attributes)
+ SEQUENCE_HANDLER(send_tertiary_device_attributes)
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index 7b5b49b094f0..07154f2172c9 100644
+index ba180146e78c..7ec6d9dd46ec 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
-@@ -2353,6 +2353,96 @@ vte_sequence_handler_return_terminal_id (VteTerminalPrivate *that, GValueArray *
- 	vte_sequence_handler_send_primary_device_attributes (that, params);
+@@ -2092,6 +2092,98 @@ VteTerminalPrivate::seq_return_terminal_id(vte::parser::Params const& params)
+ 	seq_send_primary_device_attributes(params);
  }
  
-+static void
-+vte_sequence_handler_send_notification (VteTerminalPrivate *that, GValueArray *params)
++void
++VteTerminalPrivate::seq_send_notification (vte::parser::Params const& params)
 +{
 +	GValue *value;
 +	const char *end;
@@ -202,10 +203,10 @@ index 7b5b49b094f0..07154f2172c9 100644
 +	char *str = NULL;
 +	char *p, *validated;
 +
-+	g_clear_pointer (&that->m_notification_summary, g_free);
-+	g_clear_pointer (&that->m_notification_body, g_free);
++	g_clear_pointer (&m_notification_summary, g_free);
++	g_clear_pointer (&m_notification_body, g_free);
 +
-+	value = g_value_array_get_nth (params, 0);
++	value = params.value_at_unchecked (0);
 +	if (value == NULL) {
 +		goto out;
 +	}
@@ -213,7 +214,7 @@ index 7b5b49b094f0..07154f2172c9 100644
 +	if (G_VALUE_HOLDS_STRING (value)) {
 +		option = g_value_dup_string (value);
 +	} else if (G_VALUE_HOLDS_POINTER (value)) {
-+		option = that->ucs4_to_utf8 ((const guchar *)g_value_get_pointer (value));
++		option = params.ucs4_to_utf8 ((gunichar const*)g_value_get_pointer (value));
 +	} else {
 +		goto out;
 +	}
@@ -222,7 +223,7 @@ index 7b5b49b094f0..07154f2172c9 100644
 +		goto out;
 +	}
 +
-+	value = g_value_array_get_nth (params, 1);
++	value = params.value_at_unchecked (1);
 +	if (value == NULL) {
 +		goto out;
 +	}
@@ -230,7 +231,7 @@ index 7b5b49b094f0..07154f2172c9 100644
 +	if (G_VALUE_HOLDS_STRING (value)) {
 +		str = g_value_dup_string (value);
 +	} else if (G_VALUE_HOLDS_POINTER (value)) {
-+		str = that->ucs4_to_utf8 ((const guchar *)g_value_get_pointer (value));
++		str = params.ucs4_to_utf8 ((gunichar const*)g_value_get_pointer (value));
 +	} else {
 +		goto out;
 +	}
@@ -245,15 +246,16 @@ index 7b5b49b094f0..07154f2172c9 100644
 +		}
 +	}
 +
-+	that->m_notification_summary = validated;
++	m_notification_summary = validated;
++	validated = NULL;
 +	g_free (str);
 +
-+	that->m_notification_received = TRUE;
-+	if (params->n_values == 2) {
++	m_notification_received = TRUE;
++	if (params.size () == 2) {
 +		goto out;
 +	}
 +
-+	value = g_value_array_get_nth (params, 2);
++	value = params.value_at_unchecked (2);
 +	if (value == NULL) {
 +		goto out;
 +	}
@@ -261,7 +263,7 @@ index 7b5b49b094f0..07154f2172c9 100644
 +	if (G_VALUE_HOLDS_STRING (value)) {
 +		str = g_value_dup_string (value);
 +	} else if (G_VALUE_HOLDS_POINTER (value)) {
-+		str = that->ucs4_to_utf8 ((const guchar *)g_value_get_pointer (value));
++		str = params.ucs4_to_utf8 ((gunichar const*)g_value_get_pointer (value));
 +	} else {
 +		goto out;
 +	}
@@ -276,7 +278,8 @@ index 7b5b49b094f0..07154f2172c9 100644
 +		}
 +	}
 +
-+	that->m_notification_body = validated;
++	m_notification_body = validated;
++	validated = NULL;
 +	g_free (str);
 +
 + out:
@@ -284,13 +287,13 @@ index 7b5b49b094f0..07154f2172c9 100644
 +}
 +
  /* Send secondary device attributes. */
- static void
- vte_sequence_handler_send_secondary_device_attributes (VteTerminalPrivate *that, GValueArray *params)
+ void
+ VteTerminalPrivate::seq_send_secondary_device_attributes(vte::parser::Params const& params)
 -- 
 2.14.3
 
 
-From b0b2fe7a11c0375a24a78b4352c78c6d9ec581c0 Mon Sep 17 00:00:00 2001
+From f4de5d4c0884a534d35b7d9352b31e6ae5e63421 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/5] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -321,14 +324,14 @@ index 2d211caa2f17..1c0543bd9d26 100644
 2.14.3
 
 
-From 76f035762fe6a2cebcb25d7bee4799264c5232f4 Mon Sep 17 00:00:00 2001
+From 2895d52cba9294c7afda45b8c2b248021afbff32 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/5] Test the notification-received signal
 
 ---
  bindings/vala/app.vala |  7 +++++++
- src/vteapp.c           | 10 ++++++++++
+ src/app/app.cc         | 10 ++++++++++
  2 files changed, 17 insertions(+)
 
 diff --git a/bindings/vala/app.vala b/bindings/vala/app.vala
@@ -356,39 +359,39 @@ index 8663d63c5445..4c5d9a2b3bad 100644
  } /* class Window */
  
  class App : Gtk.Application
-diff --git a/src/vteapp.c b/src/vteapp.c
-index 865df644e70e..be3bab870659 100644
---- a/src/vteapp.c
-+++ b/src/vteapp.c
-@@ -48,6 +48,13 @@ static const char *builtin_dingus[] = {
- 
- static gboolean use_gregex = FALSE;
+diff --git a/src/app/app.cc b/src/app/app.cc
+index d63adb6b8ee8..fd80760a93c1 100644
+--- a/src/app/app.cc
++++ b/src/app/app.cc
+@@ -1609,6 +1609,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
+                              vte_terminal_get_window_title(window->terminal));
+ }
  
 +static void
-+notification_received (GtkWidget *widget, const gchar *summary, const gchar *body)
++notification_received_cb(VteTerminal *terminal,
++                         const gchar *summary,
++                         const gchar *body)
 +{
-+	g_assert(VTE_TERMINAL(widget));
-+	g_print("[%s]: %s\n", summary, body);
++        g_print("[%s]: %s\n", summary, body);
 +}
 +
  static void
- window_title_changed(GtkWidget *widget, gpointer win)
- {
-@@ -966,6 +973,9 @@ main(int argc, char **argv)
- 				 G_CALLBACK(icon_title_changed), window);
- 	}
+ window_lower_window_cb(VteTerminal* terminal,
+                        VteappWindow* window)
+@@ -1836,6 +1844,8 @@ vteapp_window_constructed(GObject *object)
+         if (options.object_notifications)
+                 g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
-+	g_signal_connect(widget, "notification-received",
-+			 G_CALLBACK(notification_received), NULL);
++        g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
 +
- 	/* Connect to the "button-press" event. */
- 	g_signal_connect(widget, "button-press-event",
- 			 G_CALLBACK(button_pressed), widget);
+         /* Settings */
+         if (options.no_double_buffer)
+                 gtk_widget_set_double_buffered(GTK_WIDGET(window->terminal), false);
 -- 
 2.14.3
 
 
-From 89c7aca4a043ab9c47d787513b072649186a568a Mon Sep 17 00:00:00 2001
+From f06116cfdcf3e5050e7ffb9de8c379fa6ef91bbe Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 4/5] Add a property to configure the scroll speed
@@ -407,22 +410,22 @@ https://bugzilla.redhat.com/show_bug.cgi?id=1103380
  6 files changed, 71 insertions(+), 1 deletion(-)
 
 diff --git a/doc/reference/vte-sections.txt b/doc/reference/vte-sections.txt
-index 9b34536c7bf9..b67f3957b888 100644
+index a63fa34362c4..eaec54599ab5 100644
 --- a/doc/reference/vte-sections.txt
 +++ b/doc/reference/vte-sections.txt
-@@ -44,6 +44,7 @@ vte_terminal_set_cursor_shape
- vte_terminal_get_cursor_shape
- vte_terminal_get_cursor_blink_mode
+@@ -55,6 +55,7 @@ vte_terminal_get_cursor_blink_mode
  vte_terminal_set_cursor_blink_mode
+ vte_terminal_get_text_blink_mode
+ vte_terminal_set_text_blink_mode
 +vte_terminal_set_scroll_speed
  vte_terminal_set_scrollback_lines
+ vte_terminal_get_scrollback_lines
  vte_terminal_set_font
- vte_terminal_get_font
 diff --git a/src/vte.cc b/src/vte.cc
-index 8df17c4bc531..ef3afc427cb9 100644
+index b9bcdf1d60a9..18e0dccfbcbb 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -9900,6 +9900,7 @@ void
+@@ -10210,6 +10210,7 @@ void
  VteTerminalPrivate::widget_scroll(GdkEventScroll *event)
  {
  	gdouble delta_x, delta_y;
@@ -430,7 +433,7 @@ index 8df17c4bc531..ef3afc427cb9 100644
  	gdouble v;
  	gint cnt, i;
  	int button;
-@@ -9953,7 +9954,13 @@ VteTerminalPrivate::widget_scroll(GdkEventScroll *event)
+@@ -10263,7 +10264,13 @@ VteTerminalPrivate::widget_scroll(GdkEventScroll *event)
  		return;
  	}
  
@@ -445,7 +448,7 @@ index 8df17c4bc531..ef3afc427cb9 100644
  	_vte_debug_print(VTE_DEBUG_EVENTS,
  			"Scroll speed is %d lines per non-smooth scroll unit\n",
  			(int) v);
-@@ -10190,6 +10197,16 @@ VteTerminalPrivate::decscusr_cursor_shape()
+@@ -10524,6 +10531,16 @@ VteTerminalPrivate::decscusr_cursor_shape()
          }
  }
  
@@ -463,10 +466,10 @@ index 8df17c4bc531..ef3afc427cb9 100644
  VteTerminalPrivate::set_scrollback_lines(long lines)
  {
 diff --git a/src/vte/vteterminal.h b/src/vte/vteterminal.h
-index b3c6978f65d6..befde68c4bc5 100644
+index 6bb3ac658454..a6ee47ab3d97 100644
 --- a/src/vte/vteterminal.h
 +++ b/src/vte/vteterminal.h
-@@ -275,6 +275,10 @@ void vte_terminal_set_cursor_shape(VteTerminal *terminal,
+@@ -296,6 +296,10 @@ void vte_terminal_set_cursor_shape(VteTerminal *terminal,
  _VTE_PUBLIC
  VteCursorShape vte_terminal_get_cursor_shape(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
  
@@ -478,10 +481,10 @@ index b3c6978f65d6..befde68c4bc5 100644
  _VTE_PUBLIC
  void vte_terminal_set_scrollback_lines(VteTerminal *terminal,
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 4ccc4ff9c0ef..2b98eb8a34d2 100644
+index eecb9c35e437..89653c5ee4bc 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
-@@ -481,6 +481,9 @@ vte_terminal_get_property (GObject *object,
+@@ -490,6 +490,9 @@ vte_terminal_get_property (GObject *object,
                  case PROP_REWRAP_ON_RESIZE:
                          g_value_set_boolean (value, vte_terminal_get_rewrap_on_resize (terminal));
                          break;
@@ -489,9 +492,9 @@ index 4ccc4ff9c0ef..2b98eb8a34d2 100644
 +                        g_value_set_uint (value, impl->m_scroll_speed);
 +                        break;
                  case PROP_SCROLLBACK_LINES:
-                         g_value_set_uint (value, impl->m_scrollback_lines);
+                         g_value_set_uint (value, vte_terminal_get_scrollback_lines(terminal));
                          break;
-@@ -570,6 +573,9 @@ vte_terminal_set_property (GObject *object,
+@@ -591,6 +594,9 @@ vte_terminal_set_property (GObject *object,
                  case PROP_REWRAP_ON_RESIZE:
                          vte_terminal_set_rewrap_on_resize (terminal, g_value_get_boolean (value));
                          break;
@@ -501,7 +504,7 @@ index 4ccc4ff9c0ef..2b98eb8a34d2 100644
                  case PROP_SCROLLBACK_LINES:
                          vte_terminal_set_scrollback_lines (terminal, g_value_get_uint (value));
                          break;
-@@ -1466,6 +1472,21 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -1534,6 +1540,21 @@ vte_terminal_class_init(VteTerminalClass *klass)
                                        TRUE,
                                        (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
  
@@ -523,7 +526,7 @@ index 4ccc4ff9c0ef..2b98eb8a34d2 100644
          /**
           * VteTerminal:scrollback-lines:
           *
-@@ -3809,6 +3830,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
+@@ -4053,6 +4074,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
  	return IMPL(terminal)->m_row_count;
  }
  
@@ -555,10 +558,10 @@ index 4ccc4ff9c0ef..2b98eb8a34d2 100644
   * vte_terminal_set_scrollback_lines:
   * @terminal: a #VteTerminal
 diff --git a/src/vtegtk.hh b/src/vtegtk.hh
-index 07c714e66093..5a6c9382eeac 100644
+index 126d29326f11..b2c9edfa8246 100644
 --- a/src/vtegtk.hh
 +++ b/src/vtegtk.hh
-@@ -83,6 +83,7 @@ enum {
+@@ -86,6 +86,7 @@ enum {
          PROP_MOUSE_POINTER_AUTOHIDE,
          PROP_PTY,
          PROP_REWRAP_ON_RESIZE,
@@ -567,10 +570,10 @@ index 07c714e66093..5a6c9382eeac 100644
          PROP_SCROLL_ON_KEYSTROKE,
          PROP_SCROLL_ON_OUTPUT,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index f7faa7a52328..137987ac64ca 100644
+index cdb6bcb0b230..2257afac7334 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
-@@ -385,6 +385,7 @@ public:
+@@ -498,6 +498,7 @@ public:
          gboolean m_scroll_on_output;
          gboolean m_scroll_on_keystroke;
          gboolean m_alternate_screen_scroll;
@@ -578,7 +581,7 @@ index f7faa7a52328..137987ac64ca 100644
          vte::grid::row_t m_scrollback_lines;
  
          /* Restricted scrolling */
-@@ -1112,6 +1113,7 @@ public:
+@@ -1274,6 +1275,7 @@ public:
          bool set_mouse_autohide(bool autohide);
          bool set_pty(VtePty *pty);
          bool set_rewrap_on_resize(bool rewrap);
@@ -590,7 +593,7 @@ index f7faa7a52328..137987ac64ca 100644
 2.14.3
 
 
-From eb3c5639a5a4405ad8fa7868dbb1b3ad60dd7fe8 Mon Sep 17 00:00:00 2001
+From 6cf5ec5fe21c91ffef88581e4693cab14bd09e36 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 5/5] Test the scroll-speed property
@@ -598,8 +601,8 @@ Subject: [PATCH 5/5] Test the scroll-speed property
 https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 ---
  bindings/vala/app.vala | 4 ++++
- src/vteapp.c           | 7 +++++++
- 2 files changed, 11 insertions(+)
+ src/app/app.cc         | 4 ++++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/bindings/vala/app.vala b/bindings/vala/app.vala
 index 4c5d9a2b3bad..3b7310679239 100644
@@ -630,37 +633,34 @@ index 4c5d9a2b3bad..3b7310679239 100644
        { "scrollback-lines", 'n', 0, OptionArg.INT, ref scrollback_lines,
          "Specify the number of scrollback-lines", null },
        { "transparent", 'T', 0, OptionArg.INT, ref transparency_percent,
-diff --git a/src/vteapp.c b/src/vteapp.c
-index be3bab870659..2a0a573286e1 100644
---- a/src/vteapp.c
-+++ b/src/vteapp.c
-@@ -641,6 +641,7 @@ main(int argc, char **argv)
-                 hyperlink = TRUE;
- 	char *geometry = NULL;
- 	gint lines = -1;
-+	gint scroll_speed = 0;
- 	const char *message = "Launching interactive shell...\r\n";
- 	const char *font = NULL;
- 	const char *command = NULL;
-@@ -749,6 +750,11 @@ main(int argc, char **argv)
- 			G_OPTION_ARG_NONE, &keep,
- 			"Live on after the window closes", NULL
- 		},
-+		{
-+			"scroll-speed", 0, 0,
-+			G_OPTION_ARG_INT, &scroll_speed,
-+			"Specify the scroll speed", NULL
-+		},
- 		{
- 			"scrollback-lines", 'n', 0,
- 			G_OPTION_ARG_INT, &lines,
-@@ -1017,6 +1023,7 @@ main(int argc, char **argv)
- 	vte_terminal_set_cursor_blink_mode(terminal, cursor_blink_mode);
- 	vte_terminal_set_scroll_on_output(terminal, FALSE);
- 	vte_terminal_set_scroll_on_keystroke(terminal, TRUE);
-+	vte_terminal_set_scroll_speed(terminal, (guint) scroll_speed);
- 	vte_terminal_set_scrollback_lines(terminal, lines);
- 	vte_terminal_set_mouse_autohide(terminal, TRUE);
+diff --git a/src/app/app.cc b/src/app/app.cc
+index fd80760a93c1..d97e6d079b8a 100644
+--- a/src/app/app.cc
++++ b/src/app/app.cc
+@@ -91,6 +91,7 @@ public:
+         int verbosity{0};
+         double cell_height_scale{1.0};
+         double cell_width_scale{1.0};
++        unsigned int scroll_speed{0};
+         VteCursorBlinkMode cursor_blink_mode{VTE_CURSOR_BLINK_SYSTEM};
+         VteCursorShape cursor_shape{VTE_CURSOR_SHAPE_BLOCK};
+         VteTextBlinkMode text_blink_mode{VTE_TEXT_BLINK_ALWAYS};
+@@ -419,6 +420,8 @@ public:
+                           "Save terminal contents to file at exit", nullptr },
+                         { "reverse", 0, 0, G_OPTION_ARG_NONE, &reverse,
+                           "Reverse foreground/background colors", nullptr },
++                        { "scroll-speed", 0, 0, G_OPTION_ARG_INT, &scroll_speed,
++                          "Specify the scroll speed", nullptr },
+                         { "scrollback-lines", 'n', 0, G_OPTION_ARG_INT, &scrollback_lines,
+                           "Specify the number of scrollback-lines (-1 for infinite)", nullptr },
+                         { "transparent", 'T', 0, G_OPTION_ARG_INT, &transparency_percent,
+@@ -1873,6 +1876,7 @@ vteapp_window_constructed(GObject *object)
+         vte_terminal_set_rewrap_on_resize(window->terminal, !options.no_rewrap);
+         vte_terminal_set_scroll_on_output(window->terminal, false);
+         vte_terminal_set_scroll_on_keystroke(window->terminal, true);
++        vte_terminal_set_scroll_speed(window->terminal, options.scroll_speed);
+         vte_terminal_set_scrollback_lines(window->terminal, options.scrollback_lines);
+         vte_terminal_set_text_blink_mode(window->terminal, options.text_blink_mode);
  
 -- 
 2.14.3
