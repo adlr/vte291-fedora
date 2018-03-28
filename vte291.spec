@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.51.3
+Version:        0.51.90
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -98,6 +98,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed Mar 28 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.51.90-1
+- Update to 0.51.90
+
 * Wed Mar 28 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.51.3-1
 - Update to 0.51.3
 - Rebase downstream patches
