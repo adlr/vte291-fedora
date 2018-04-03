@@ -77,8 +77,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %find_lang vte-%{apiver}
 
-%ldconfig_scriptlets
-
 %files -f vte-%{apiver}.lang
 %license COPYING
 %doc NEWS README
@@ -100,6 +98,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %changelog
 * Tue Apr 03 2018 Kalev Lember <klember@redhat.com> - 0.52.0-1
 - Update to 0.52.0
+- Remove ldconfig scriptlets
 
 * Wed Mar 28 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.51.90-1
 - Update to 0.51.90
