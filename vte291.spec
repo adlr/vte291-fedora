@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.53.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -22,8 +22,8 @@ BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  intltool
 BuildRequires:  vala
 
-# initscripts creates the utmp group
-Requires:       initscripts
+# systemd creates the utmp group
+Requires:       systemd
 Requires:       vte-profile
 
 Conflicts:      gnome-terminal < 3.20.1-2
@@ -96,6 +96,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Jun 18 2018 Kalev Lember <klember@redhat.com> - 0.53.0-2
+- Require systemd, not initscripts for the utmp group (#1592403)
+
 * Mon Jun 04 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.53.0-1
 - Update to 0.53.0
 
