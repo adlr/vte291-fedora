@@ -9,6 +9,8 @@ License:        LGPLv2+
 URL:            http://www.gnome.org/
 Source0:        http://download.gnome.org/sources/vte/0.53/vte-%{version}.tar.xz
 
+Patch0:         vte291-Fix-the-build-with-GCC-8.1.1.patch
+
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 Patch100:       vte291-command-notify-scroll-speed.patch
@@ -57,6 +59,7 @@ emulator library.
 
 %prep
 %setup -q -n vte-%{version}
+%patch0 -p1 -b .fix-the-build
 %patch100 -p1 -b .command-notify-scroll-speed
 
 %build
@@ -78,8 +81,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %find_lang vte-%{apiver}
 
 %files -f vte-%{apiver}.lang
-%license COPYING
-%doc NEWS README
+%license COPYING.GPL3
+%doc NEWS
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
 
