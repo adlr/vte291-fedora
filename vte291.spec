@@ -15,6 +15,7 @@ Patch0:         vte291-Fix-the-build-with-GCC-8.1.1.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 Patch100:       vte291-command-notify-scroll-speed.patch
 
+BuildRequires:  gcc-c++
 BuildRequires:  gettext
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  gobject-introspection-devel
