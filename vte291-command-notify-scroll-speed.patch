@@ -1,4 +1,4 @@
-From 2ed7d23e2ca2c71ecc34bd555166a91f3b07e070 Mon Sep 17 00:00:00 2001
+From 0aae9eb7587d3061bb256a6b4d3208e9bcd69a5c Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/5] Add sequences and signals for desktop notification
@@ -38,10 +38,10 @@ index 1e4d0c1b6476..3385b4759713 100644
  VOID:STRING,UINT
  VOID:UINT,UINT
 diff --git a/src/vte.cc b/src/vte.cc
-index 32323f468f59..b368cd5eeae2 100644
+index 75f32990c777..8bfe44eac336 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10565,6 +10565,15 @@ Terminal::emit_pending_signals()
+@@ -10579,6 +10579,15 @@ Terminal::emit_pending_signals()
  
  	emit_adjustment_changed();
  
@@ -125,7 +125,7 @@ index c49754ef38ee..126d29326f11 100644
          LAST_SIGNAL
  };
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 785901b89d82..b2344e906244 100644
+index 1652ca5fe6ed..c5b24ffe2ca9 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -578,6 +578,11 @@ public:
@@ -140,7 +140,7 @@ index 785901b89d82..b2344e906244 100644
          std::string m_window_title{};
          std::string m_current_directory_uri{};
          std::string m_current_file_uri{};
-@@ -1322,6 +1327,9 @@ public:
+@@ -1323,6 +1328,9 @@ public:
                               int osc) noexcept;
  
          /* OSC handlers */
@@ -151,7 +151,7 @@ index 785901b89d82..b2344e906244 100644
                         vte::parser::StringTokeniser::const_iterator& token,
                         vte::parser::StringTokeniser::const_iterator const& endtoken,
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index f059757d86e0..bcd4614aada9 100644
+index 2a46f2e3b2b7..03ea24bd2951 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -1341,6 +1341,34 @@ Terminal::delete_lines(vte::grid::row_t param)
@@ -212,7 +212,7 @@ index f059757d86e0..bcd4614aada9 100644
 2.14.4
 
 
-From af373aa1f1f117ff9e602b8693e00dfef7fb6ea6 Mon Sep 17 00:00:00 2001
+From 27455abc1eea578b389e89f9475870330530cd21 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/5] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -243,7 +243,7 @@ index 5fb16996dd93..2a328de27cbd 100644
 2.14.4
 
 
-From bcc7006f6489009a8db18a71fb83c32cff6291d8 Mon Sep 17 00:00:00 2001
+From 291857971df4104c9afa8c66d8d8bc788a3aabd4 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/5] Test the notification-received signal
@@ -310,7 +310,7 @@ index b155efa3f348..250d09d8b4c5 100644
 2.14.4
 
 
-From 6075fd589b25de73fff0a4216edbb1ca2cbfd8c3 Mon Sep 17 00:00:00 2001
+From 41729384ec63d6ac2303d423bd0cf24fb91f832e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 4/5] Add a property to configure the scroll speed
@@ -341,10 +341,10 @@ index b46e30620fe1..bda65e4c788e 100644
  vte_terminal_get_scrollback_lines
  vte_terminal_set_font
 diff --git a/src/vte.cc b/src/vte.cc
-index b368cd5eeae2..dea436c53178 100644
+index 8bfe44eac336..90368463381d 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -9800,6 +9800,7 @@ void
+@@ -9814,6 +9814,7 @@ void
  Terminal::widget_scroll(GdkEventScroll *event)
  {
  	gdouble delta_x, delta_y;
@@ -352,7 +352,7 @@ index b368cd5eeae2..dea436c53178 100644
  	gdouble v;
  	gint cnt, i;
  	int button;
-@@ -9853,7 +9854,13 @@ Terminal::widget_scroll(GdkEventScroll *event)
+@@ -9867,7 +9868,13 @@ Terminal::widget_scroll(GdkEventScroll *event)
  		return;
  	}
  
@@ -367,7 +367,7 @@ index b368cd5eeae2..dea436c53178 100644
  	_vte_debug_print(VTE_DEBUG_EVENTS,
  			"Scroll speed is %d lines per non-smooth scroll unit\n",
  			(int) v);
-@@ -10114,6 +10121,16 @@ Terminal::decscusr_cursor_shape()
+@@ -10128,6 +10135,16 @@ Terminal::decscusr_cursor_shape()
          }
  }
  
@@ -489,7 +489,7 @@ index 126d29326f11..b2c9edfa8246 100644
          PROP_SCROLL_ON_KEYSTROKE,
          PROP_SCROLL_ON_OUTPUT,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index b2344e906244..7cd8e50d66a7 100644
+index c5b24ffe2ca9..620bcf200af6 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -457,6 +457,7 @@ public:
@@ -500,7 +500,7 @@ index b2344e906244..7cd8e50d66a7 100644
          vte::grid::row_t m_scrollback_lines;
  
          /* Restricted scrolling */
-@@ -1200,6 +1201,7 @@ public:
+@@ -1201,6 +1202,7 @@ public:
          bool set_mouse_autohide(bool autohide);
          bool set_pty(VtePty *pty);
          bool set_rewrap_on_resize(bool rewrap);
@@ -512,7 +512,7 @@ index b2344e906244..7cd8e50d66a7 100644
 2.14.4
 
 
-From 8f84433d68d5ac0ed91990eefbbe59c754913f70 Mon Sep 17 00:00:00 2001
+From 872218fbfe8075ffeed9bf9dab82e9955fdcc187 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 5/5] Test the scroll-speed property
