@@ -1,61 +1,26 @@
-From a13b07d346b280592510e7ee6af05bc602197691 Mon Sep 17 00:00:00 2001
-From: Debarshi Ray <debarshir@gnome.org>
-Date: Tue, 19 Jun 2018 18:28:25 +0200
-Subject: [PATCH] parser: Fix the build with GCC 8.1.1
+From 4e7fe2f2fc02cc008f67d80ef3cd9b41a8f17129 Mon Sep 17 00:00:00 2001
+From: Egmont Koblinger <egmont@gmail.com>
+Date: Thu, 27 Sep 2018 21:25:50 +0200
+Subject: [PATCH] widget: Add missing exception specification
 
-Otherwise it fails with:
-
-vteseq.cc:47:1: error: declaration of
-      'void vte::parser::Sequence::print() const' has a different
-      exception specifier
-    vte::parser::Sequence::print() const
-    ^~~
-  In file included from vteinternal.hh:30,
-                   from vteseq.cc:34:
-  parser-glue.hh:83:14: note: from previous declaration
-      'void vte::parser::Sequence::print() const noexcept'
-           void print() const noexcept;
-                ^~~~~
-
-... and so on.
-
-Fixes GNOME/vte#5:
-https://gitlab.gnome.org/GNOME/vte/issues/5
+This fixes compiling with clang.
 ---
- src/vteseq.cc | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ src/widget.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/vteseq.cc b/src/vteseq.cc
-index ba97480ce120..98f71b87e98e 100644
---- a/src/vteseq.cc
-+++ b/src/vteseq.cc
-@@ -44,7 +44,7 @@
- using namespace std::literals;
+diff --git a/src/widget.cc b/src/widget.cc
+index 0f2e509e6c0c..deaf789de6e2 100644
+--- a/src/widget.cc
++++ b/src/widget.cc
+@@ -327,7 +327,7 @@ Widget::size_allocate(GtkAllocation* allocation) noexcept
+ }
  
  void
--vte::parser::Sequence::print() const
-+vte::parser::Sequence::print() const noexcept
+-Widget::unmap()
++Widget::unmap() noexcept
  {
- #ifdef VTE_DEBUG
-         auto c = m_seq != nullptr ? terminator() : 0;
-@@ -145,7 +145,7 @@ vte_unichar_strlen(gunichar const* c)
-  */
- char*
- vte::parser::Sequence::ucs4_to_utf8(gunichar const* str,
--                                    ssize_t len) const
-+                                    ssize_t len) const noexcept
- {
-         if (len < 0)
-                 len = vte_unichar_strlen(str);
-@@ -1406,7 +1406,7 @@ VteTerminalPrivate::set_color_index(vte::parser::Sequence const& seq,
-                                     int number,
-                                     int index,
-                                     int index_fallback,
--                                    int osc)
-+                                    int osc) noexcept
- {
-         auto const str = *token;
- 
+         if (m_event_window)
+                 gdk_window_hide(m_event_window);
 -- 
 2.14.4
 

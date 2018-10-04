@@ -1,8 +1,8 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:        0.53.0
-Release:        3%{?dist}
+Version:        0.53.92
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -71,8 +71,9 @@ LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now -pie" \
         --disable-static \
         --libexecdir=%{_libdir}/vte-%{apiver} \
         --disable-gtk-doc \
+        --disable-silent-rules \
         --enable-introspection
-make %{?_smp_mflags} V=1
+%make_build
 
 %install
 %make_install
@@ -100,6 +101,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Oct 04 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.53.92-1
+- Update to 0.53.92
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.53.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
