@@ -6,7 +6,7 @@
 
 Name:           vte291
 Version:        0.54.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -108,6 +108,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Oct 05 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.54.1-3
+- Tweak the escape sequence emission to unbreak the parsing
+
 * Fri Oct 05 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.54.1-2
 - Tighten the dependencies a bit
 
