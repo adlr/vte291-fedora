@@ -1,8 +1,12 @@
 %global apiver 2.91
 
+%global gnutls_version 3.2.7
+%global gtk3_version 3.8.0
+%global pcre2_version 10.21
+
 Name:           vte291
 Version:        0.54.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -17,15 +21,18 @@ Patch100:       vte291-command-notify-scroll-speed.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
-BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(gnutls) >= %{gnutls_version}
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
-BuildRequires:  pkgconfig(gtk+-3.0)
-BuildRequires:  pkgconfig(libpcre2-8)
+BuildRequires:  pkgconfig(gtk+-3.0) >= %{gtk3_version}
+BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
 BuildRequires:  intltool
 BuildRequires:  vala
 
 # systemd creates the utmp group
+Requires:       gnutls%{?_isa} >= %{gnutls_version}
+Requires:       gtk3%{?_isa} >= %{gtk3_version}
+Requires:       pcre2%{?_isa} >= %{pcre2_version}
 Requires:       systemd
 Requires:       vte-profile
 
@@ -101,6 +108,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Oct 05 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.54.1-2
+- Tighten the dependencies a bit
+
 * Fri Oct 05 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.54.1-1
 - Update to 0.54.1
 
