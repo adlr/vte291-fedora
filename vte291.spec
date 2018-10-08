@@ -6,7 +6,7 @@
 
 Name:           vte291
 Version:        0.54.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -29,11 +29,9 @@ BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
 BuildRequires:  intltool
 BuildRequires:  vala
 
-# systemd creates the utmp group
 Requires:       gnutls%{?_isa} >= %{gnutls_version}
 Requires:       gtk3%{?_isa} >= %{gtk3_version}
 Requires:       pcre2%{?_isa} >= %{pcre2_version}
-Requires:       systemd
 Requires:       vte-profile
 
 Conflicts:      gnome-terminal < 3.20.1-2
@@ -108,6 +106,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Oct 08 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.54.1-4
+- Removal of utmp logging makes the utmp group unnecessary
+
 * Fri Oct 05 2018 Debarshi Ray <rishi@fedoraproject.org> - 0.54.1-3
 - Tweak the escape sequence emission to unbreak the parsing
 
