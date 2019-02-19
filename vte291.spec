@@ -5,13 +5,13 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.54.3
-Release:        2%{?dist}
+Version:        0.55.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.54/vte-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vte/0.55/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
@@ -103,6 +103,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Feb 19 2019 Kalev Lember <klember@redhat.com> - 0.55.90-1
+- Update to 0.55.90
+
 * Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 0.54.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
