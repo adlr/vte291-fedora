@@ -6,7 +6,7 @@
 
 Name:           vte291
 Version:        0.56.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -103,6 +103,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Apr 02 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.56.0-2
+- Add signals proxying an interactive shell's precmd and preexec hooks.
+
 * Mon Mar 11 2019 Kalev Lember <klember@redhat.com> - 0.56.0-1
 - Update to 0.56.0
 
