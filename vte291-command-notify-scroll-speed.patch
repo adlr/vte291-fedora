@@ -1,4 +1,4 @@
-From 164096495a6a44a5ccfd4f05f56d132be6b6f765 Mon Sep 17 00:00:00 2001
+From 7ea398739da14b1e377655b0651c10edcf664200 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/9] Add sequences and signals for desktop notification
@@ -38,10 +38,10 @@ index 1e4d0c1b6476..3385b4759713 100644
  VOID:STRING,UINT
  VOID:UINT,UINT
 diff --git a/src/vte.cc b/src/vte.cc
-index af01264ea240..03de88245269 100644
+index 0e799cef38e9..802ce6df34a6 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10203,6 +10203,15 @@ Terminal::emit_pending_signals()
+@@ -10216,6 +10216,15 @@ Terminal::emit_pending_signals()
  
  	emit_adjustment_changed();
  
@@ -125,7 +125,7 @@ index c49754ef38ee..126d29326f11 100644
          LAST_SIGNAL
  };
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 58cb0479c5c4..7de222442663 100644
+index 9010b9b01816..eb2cda249ee1 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -539,6 +539,11 @@ public:
@@ -140,7 +140,7 @@ index 58cb0479c5c4..7de222442663 100644
          std::string m_window_title{};
          std::string m_current_directory_uri{};
          std::string m_current_file_uri{};
-@@ -1269,6 +1274,9 @@ public:
+@@ -1270,6 +1275,9 @@ public:
                               int osc) noexcept;
  
          /* OSC handlers */
@@ -209,10 +209,10 @@ index d596d8b9f56f..fbbf4f032f48 100644
          default:
                  break;
 -- 
-2.20.1
+2.21.0
 
 
-From d6c7e381d801680ceaff2859e83bffa272befc12 Mon Sep 17 00:00:00 2001
+From 70ea93584a0cb19492c0dd52155112eaa4d54aed Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/9] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -244,10 +244,10 @@ index 6d1a8734c479..b75c6dac6f6e 100644
  
  case "$TERM" in
 -- 
-2.20.1
+2.21.0
 
 
-From 15e68b0935424533d95e6f31f4f094387251346d Mon Sep 17 00:00:00 2001
+From b3635ba1c60f123799e1e923c3492a117a700b46 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/9] Test the notification-received signal
@@ -283,10 +283,10 @@ index a534e76b7f42..138d453d5d98 100644
  
  class App : Gtk.Application
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 81193a07a045..14a31fe3cddf 100644
+index ba76c9b37315..db022476e95e 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -1671,6 +1671,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
+@@ -1673,6 +1673,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
                               vte_terminal_get_window_title(window->terminal));
  }
  
@@ -301,7 +301,7 @@ index 81193a07a045..14a31fe3cddf 100644
  static void
  window_lower_window_cb(VteTerminal* terminal,
                         VteappWindow* window)
-@@ -1899,6 +1907,8 @@ vteapp_window_constructed(GObject *object)
+@@ -1901,6 +1909,8 @@ vteapp_window_constructed(GObject *object)
          if (options.object_notifications)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
@@ -311,10 +311,10 @@ index 81193a07a045..14a31fe3cddf 100644
          if (options.no_double_buffer)
                  gtk_widget_set_double_buffered(GTK_WIDGET(window->terminal), false);
 -- 
-2.20.1
+2.21.0
 
 
-From eed36f6b71b485e104ad4e026601177eba0491db Mon Sep 17 00:00:00 2001
+From d54f3a1a1223e66a0631b739975bbce592eee62e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 4/9] Add a property to configure the scroll speed
@@ -345,10 +345,10 @@ index 9ab873c17bfc..7b94f4df9a30 100644
  vte_terminal_get_scrollback_lines
  vte_terminal_set_font
 diff --git a/src/vte.cc b/src/vte.cc
-index 03de88245269..f88c3a246f70 100644
+index 802ce6df34a6..49e4007090d2 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -9451,6 +9451,7 @@ void
+@@ -9462,6 +9462,7 @@ void
  Terminal::widget_scroll(GdkEventScroll *event)
  {
  	gdouble delta_x, delta_y;
@@ -356,7 +356,7 @@ index 03de88245269..f88c3a246f70 100644
  	gdouble v;
  	gint cnt, i;
  	int button;
-@@ -9504,7 +9505,13 @@ Terminal::widget_scroll(GdkEventScroll *event)
+@@ -9515,7 +9516,13 @@ Terminal::widget_scroll(GdkEventScroll *event)
  		return;
  	}
  
@@ -371,7 +371,7 @@ index 03de88245269..f88c3a246f70 100644
  	_vte_debug_print(VTE_DEBUG_EVENTS,
  			"Scroll speed is %d lines per non-smooth scroll unit\n",
  			(int) v);
-@@ -9765,6 +9772,16 @@ Terminal::decscusr_cursor_shape()
+@@ -9776,6 +9783,16 @@ Terminal::decscusr_cursor_shape()
          }
  }
  
@@ -493,7 +493,7 @@ index 126d29326f11..b2c9edfa8246 100644
          PROP_SCROLL_ON_KEYSTROKE,
          PROP_SCROLL_ON_OUTPUT,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 7de222442663..86a8a6e76751 100644
+index eb2cda249ee1..17c844137e31 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -418,6 +418,7 @@ public:
@@ -504,19 +504,19 @@ index 7de222442663..86a8a6e76751 100644
          vte::grid::row_t m_scrollback_lines;
  
          /* Restricted scrolling */
-@@ -1147,6 +1148,7 @@ public:
-         bool set_mouse_autohide(bool autohide);
-         bool set_pty(VtePty *pty);
+@@ -1148,6 +1149,7 @@ public:
+         bool set_pty(VtePty *pty,
+                      bool proces_remaining = true);
          bool set_rewrap_on_resize(bool rewrap);
 +        bool set_scroll_speed(unsigned int scroll_speed);
          bool set_scrollback_lines(long lines);
          bool set_scroll_on_keystroke(bool scroll);
          bool set_scroll_on_output(bool scroll);
 -- 
-2.20.1
+2.21.0
 
 
-From dd925ba940c291294b86c7913cb6345fe2d00110 Mon Sep 17 00:00:00 2001
+From 817a1f9047b62a72285e5c7a2905f1587f56b520 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 5/9] Test the scroll-speed property
@@ -557,7 +557,7 @@ index 138d453d5d98..61b8ec8edd24 100644
          "Specify the number of scrollback-lines", null },
        { "transparent", 'T', 0, OptionArg.INT, ref transparency_percent,
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 14a31fe3cddf..8632061920d6 100644
+index db022476e95e..9dbd3d21c3cb 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
 @@ -93,6 +93,7 @@ public:
@@ -577,7 +577,7 @@ index 14a31fe3cddf..8632061920d6 100644
                          { "scrollback-lines", 'n', 0, G_OPTION_ARG_INT, &scrollback_lines,
                            "Specify the number of scrollback-lines (-1 for infinite)", nullptr },
                          { "transparent", 'T', 0, G_OPTION_ARG_INT, &transparency_percent,
-@@ -1937,6 +1940,7 @@ vteapp_window_constructed(GObject *object)
+@@ -1939,6 +1942,7 @@ vteapp_window_constructed(GObject *object)
          vte_terminal_set_rewrap_on_resize(window->terminal, !options.no_rewrap);
          vte_terminal_set_scroll_on_output(window->terminal, false);
          vte_terminal_set_scroll_on_keystroke(window->terminal, true);
@@ -586,10 +586,10 @@ index 14a31fe3cddf..8632061920d6 100644
          vte_terminal_set_text_blink_mode(window->terminal, options.text_blink_mode);
  
 -- 
-2.20.1
+2.21.0
 
 
-From 0c676b11d79cfdcdf6607be27b721ac2fa4454ce Mon Sep 17 00:00:00 2001
+From 9e2b4809052e1c4d38a9355d1171da38d0b1445e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 6/9] Support preexec notifications from an interactive shell
@@ -622,10 +622,10 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711060
  7 files changed, 35 insertions(+), 2 deletions(-)
 
 diff --git a/src/vte.cc b/src/vte.cc
-index f88c3a246f70..9e92151feee9 100644
+index 49e4007090d2..7b00500b28a2 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10229,6 +10229,13 @@ Terminal::emit_pending_signals()
+@@ -10242,6 +10242,13 @@ Terminal::emit_pending_signals()
                  m_notification_received = FALSE;
  	}
  
@@ -717,7 +717,7 @@ index b2c9edfa8246..136ffa3b534d 100644
          SIGNAL_TEXT_INSERTED,
          SIGNAL_TEXT_MODIFIED,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 86a8a6e76751..68cc42493066 100644
+index 17c844137e31..e9a346b617b8 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -545,6 +545,8 @@ public:
@@ -745,10 +745,10 @@ index fbbf4f032f48..1210365679ac 100644
  
  bool
 -- 
-2.20.1
+2.21.0
 
 
-From 383cffcc9e6cbb90e0e0ca89bc5c28578ce5376f Mon Sep 17 00:00:00 2001
+From 00f5cd9d9137247ce0dc188b68665a193968047b Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
 Subject: [PATCH 7/9] Test the shell-preexec signal
@@ -785,10 +785,10 @@ index 61b8ec8edd24..12114e2f445e 100644
  
  class App : Gtk.Application
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 8632061920d6..f98d60e0ba6b 100644
+index 9dbd3d21c3cb..77fe1fa09eaf 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -1682,6 +1682,12 @@ notification_received_cb(VteTerminal *terminal,
+@@ -1684,6 +1684,12 @@ notification_received_cb(VteTerminal *terminal,
          g_print("[%s]: %s\n", summary, body);
  }
  
@@ -801,7 +801,7 @@ index 8632061920d6..f98d60e0ba6b 100644
  static void
  window_lower_window_cb(VteTerminal* terminal,
                         VteappWindow* window)
-@@ -1911,6 +1917,7 @@ vteapp_window_constructed(GObject *object)
+@@ -1913,6 +1919,7 @@ vteapp_window_constructed(GObject *object)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
          g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
@@ -810,10 +810,10 @@ index 8632061920d6..f98d60e0ba6b 100644
          /* Settings */
          if (options.no_double_buffer)
 -- 
-2.20.1
+2.21.0
 
 
-From 15093cdbae20a266f02aa9ed9cdd7999e5857664 Mon Sep 17 00:00:00 2001
+From 49db30c4531daddf9265bf2a81218c302dde5c51 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
 Subject: [PATCH 8/9] Support precmd notifications from an interactive shell
@@ -842,10 +842,10 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711060
  7 files changed, 33 insertions(+), 3 deletions(-)
 
 diff --git a/src/vte.cc b/src/vte.cc
-index 9e92151feee9..2a454cc10da3 100644
+index 7b00500b28a2..3b8517682278 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10236,6 +10236,13 @@ Terminal::emit_pending_signals()
+@@ -10249,6 +10249,13 @@ Terminal::emit_pending_signals()
                  m_shell_preexec = FALSE;
          }
  
@@ -938,7 +938,7 @@ index 136ffa3b534d..bae75f4b1f6a 100644
          SIGNAL_TEXT_DELETED,
          SIGNAL_TEXT_INSERTED,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 68cc42493066..c46eb390a0a2 100644
+index e9a346b617b8..92509fa5bf53 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -545,6 +545,7 @@ public:
@@ -965,10 +965,10 @@ index 1210365679ac..0aa6756f1904 100644
          }
  }
 -- 
-2.20.1
+2.21.0
 
 
-From 32b2ca2da4d583ea81d835836a8835c3ad3f40f9 Mon Sep 17 00:00:00 2001
+From cd29674f7db2ef239fe2160b2aac4e803b7c4497 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
 Subject: [PATCH 9/9] Test the shell-precmd signal
@@ -1005,10 +1005,10 @@ index 12114e2f445e..169302460c68 100644
    {
      print("[shell] executing command\n");
 diff --git a/src/app/app.cc b/src/app/app.cc
-index f98d60e0ba6b..60fcda232881 100644
+index 77fe1fa09eaf..fa7bc0d20004 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -1682,6 +1682,12 @@ notification_received_cb(VteTerminal *terminal,
+@@ -1684,6 +1684,12 @@ notification_received_cb(VteTerminal *terminal,
          g_print("[%s]: %s\n", summary, body);
  }
  
@@ -1021,7 +1021,7 @@ index f98d60e0ba6b..60fcda232881 100644
  static void
  shell_preexec_cb(VteTerminal *terminal)
  {
-@@ -1917,6 +1923,7 @@ vteapp_window_constructed(GObject *object)
+@@ -1919,6 +1925,7 @@ vteapp_window_constructed(GObject *object)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
          g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
@@ -1030,5 +1030,5 @@ index f98d60e0ba6b..60fcda232881 100644
  
          /* Settings */
 -- 
-2.20.1
+2.21.0
 

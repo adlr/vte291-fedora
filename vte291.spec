@@ -1,11 +1,11 @@
 %global apiver 2.91
 
 %global gnutls_version 3.2.7
-%global gtk3_version 3.8.0
+%global gtk3_version 3.19.5
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.56.2
+Version:        0.56.3
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -103,6 +103,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue May 07 2019 Kalev Lember <klember@redhat.com> - 0.56.3-1
+- Update to 0.56.3
+
 * Mon May 06 2019 Kalev Lember <klember@redhat.com> - 0.56.2-1
 - Update to 0.56.2
 
