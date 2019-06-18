@@ -2,16 +2,17 @@
 
 %global gnutls_version 3.2.7
 %global gtk3_version 3.19.5
+%global pango_version 1.22.0
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.56.3
+Version:        0.57.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.56/vte-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vte/0.57/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
@@ -22,13 +23,16 @@ BuildRequires:  gettext
 BuildRequires:  pkgconfig(gnutls) >= %{gnutls_version}
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
+BuildRequires:  gtk-doc
+BuildRequires:  meson
 BuildRequires:  pkgconfig(gtk+-3.0) >= %{gtk3_version}
 BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
-BuildRequires:  intltool
+BuildRequires:  pkgconfig(pango) >= %{pango_version}
 BuildRequires:  vala
 
 Requires:       gnutls%{?_isa} >= %{gnutls_version}
 Requires:       gtk3%{?_isa} >= %{gtk3_version}
+Requires:       pango >= %{pango_version}
 Requires:       pcre2%{?_isa} >= %{pcre2_version}
 Requires:       vte-profile
 
@@ -66,21 +70,11 @@ emulator library.
 %patch100 -p1 -b .command-notify-scroll-speed
 
 %build
-CFLAGS="%optflags -fPIE -DPIE -Wno-nonnull" \
-CXXFLAGS="$CFLAGS" \
-LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,now -pie" \
-%configure \
-        --disable-static \
-        --libexecdir=%{_libdir}/vte-%{apiver} \
-        --disable-gtk-doc \
-        --disable-silent-rules \
-        --enable-introspection
-%make_build
+%meson --buildtype=plain -Ddocs=true
+%meson_build
 
 %install
-%make_install
-
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+%meson_install
 
 %find_lang vte-%{apiver}
 
@@ -103,6 +97,11 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Jun 18 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.57.0-1
+- Update to 0.57.0
+- Switch to the Meson build system
+- Rebase downstream patches
+
 * Tue May 07 2019 Kalev Lember <klember@redhat.com> - 0.56.3-1
 - Update to 0.56.3
 

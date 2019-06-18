@@ -1,4 +1,4 @@
-From 7ea398739da14b1e377655b0651c10edcf664200 Mon Sep 17 00:00:00 2001
+From e4f4b9498dda3fa850bc9d40d8e0537b533c502e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 1/9] Add sequences and signals for desktop notification
@@ -38,21 +38,21 @@ index 1e4d0c1b6476..3385b4759713 100644
  VOID:STRING,UINT
  VOID:UINT,UINT
 diff --git a/src/vte.cc b/src/vte.cc
-index 0e799cef38e9..802ce6df34a6 100644
+index 0aa9a3fc6b42..cef9a05be18a 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10216,6 +10216,15 @@ Terminal::emit_pending_signals()
+@@ -10205,6 +10205,15 @@ Terminal::emit_pending_signals()
  
  	emit_adjustment_changed();
  
-+	if (m_notification_received) {
++        if (m_notification_received) {
 +                _vte_debug_print (VTE_DEBUG_SIGNALS,
 +                                  "Emitting `notification-received'.\n");
 +                g_signal_emit(object, signals[SIGNAL_NOTIFICATION_RECEIVED], 0,
 +                              m_notification_summary.c_str(),
 +                              m_notification_body.c_str());
-+                m_notification_received = FALSE;
-+	}
++                m_notification_received = false;
++        }
 +
  	if (m_window_title_changed) {
                  if (m_window_title != m_window_title_pending) {
@@ -74,10 +74,10 @@ index 26ac236ef4ea..abf1a38cb20d 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index ea8b3208542c..4f67c186d245 100644
+index c47a5c4a9d2b..03570d4c5554 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
-@@ -729,6 +729,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -727,6 +727,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
  	klass->child_exited = NULL;
  	klass->encoding_changed = NULL;
  	klass->char_size_changed = NULL;
@@ -85,7 +85,7 @@ index ea8b3208542c..4f67c186d245 100644
  	klass->window_title_changed = NULL;
  	klass->icon_title_changed = NULL;
  	klass->selection_changed = NULL;
-@@ -804,6 +805,26 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -802,6 +803,26 @@ vte_terminal_class_init(VteTerminalClass *klass)
                               G_TYPE_NONE,
                               1, G_TYPE_INT);
  
@@ -125,7 +125,7 @@ index c49754ef38ee..126d29326f11 100644
          LAST_SIGNAL
  };
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 9010b9b01816..eb2cda249ee1 100644
+index 58cb0479c5c4..dd4bd37c38e1 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -539,6 +539,11 @@ public:
@@ -133,14 +133,14 @@ index 9010b9b01816..eb2cda249ee1 100644
          gboolean m_contents_changed_pending;
  
 +        /* desktop notification */
-+        gboolean m_notification_received;
++        bool m_notification_received{false};
 +        std::string m_notification_summary;
 +        std::string m_notification_body;
 +
          std::string m_window_title{};
          std::string m_current_directory_uri{};
          std::string m_current_file_uri{};
-@@ -1270,6 +1275,9 @@ public:
+@@ -1269,6 +1274,9 @@ public:
                               int osc) noexcept;
  
          /* OSC handlers */
@@ -151,7 +151,7 @@ index 9010b9b01816..eb2cda249ee1 100644
                         vte::parser::StringTokeniser::const_iterator& token,
                         vte::parser::StringTokeniser::const_iterator const& endtoken,
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index d596d8b9f56f..fbbf4f032f48 100644
+index d596d8b9f56f..942ae5126a3e 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -1334,6 +1334,34 @@ Terminal::delete_lines(vte::grid::row_t param)
@@ -175,7 +175,7 @@ index d596d8b9f56f..fbbf4f032f48 100644
 +
 +                m_notification_summary = *token;
 +                m_notification_body.clear();
-+                m_notification_received = TRUE;
++                m_notification_received = true;
 +                ++token;
 +
 +                if (token == endtoken)
@@ -209,10 +209,10 @@ index d596d8b9f56f..fbbf4f032f48 100644
          default:
                  break;
 -- 
-2.21.0
+2.20.1
 
 
-From 70ea93584a0cb19492c0dd52155112eaa4d54aed Mon Sep 17 00:00:00 2001
+From 64d5096aeb6bb49581f9cc54851afa3d54506289 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 2/9] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -244,10 +244,10 @@ index 6d1a8734c479..b75c6dac6f6e 100644
  
  case "$TERM" in
 -- 
-2.21.0
+2.20.1
 
 
-From b3635ba1c60f123799e1e923c3492a117a700b46 Mon Sep 17 00:00:00 2001
+From 64f46c2a7a5d51cefdffb928855a0d86d5204480 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 3/9] Test the notification-received signal
@@ -258,17 +258,17 @@ Subject: [PATCH 3/9] Test the notification-received signal
  2 files changed, 17 insertions(+)
 
 diff --git a/bindings/vala/app.vala b/bindings/vala/app.vala
-index a534e76b7f42..138d453d5d98 100644
+index fc26c2b0dfc3..634b8ddeeb91 100644
 --- a/bindings/vala/app.vala
 +++ b/bindings/vala/app.vala
 @@ -309,6 +309,8 @@ class Window : Gtk.ApplicationWindow
-     if (App.Options.object_notifications)
+     if (Options.object_notifications)
        terminal.notify.connect(notify_cb);
  
 +    terminal.notification_received.connect(notification_received_cb);
 +
      /* Settings */
-     if (App.Options.no_double_buffer)
+     if (Options.no_double_buffer)
        terminal.set_double_buffered(false);
 @@ -780,6 +782,11 @@ class Window : Gtk.ApplicationWindow
      set_title(terminal.get_window_title());
@@ -283,10 +283,10 @@ index a534e76b7f42..138d453d5d98 100644
  
  class App : Gtk.Application
 diff --git a/src/app/app.cc b/src/app/app.cc
-index ba76c9b37315..db022476e95e 100644
+index 495bdcfa3768..8ae589ad2449 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -1673,6 +1673,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
+@@ -1671,6 +1671,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
                               vte_terminal_get_window_title(window->terminal));
  }
  
@@ -301,7 +301,7 @@ index ba76c9b37315..db022476e95e 100644
  static void
  window_lower_window_cb(VteTerminal* terminal,
                         VteappWindow* window)
-@@ -1901,6 +1909,8 @@ vteapp_window_constructed(GObject *object)
+@@ -1899,6 +1907,8 @@ vteapp_window_constructed(GObject *object)
          if (options.object_notifications)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
@@ -311,10 +311,10 @@ index ba76c9b37315..db022476e95e 100644
          if (options.no_double_buffer)
                  gtk_widget_set_double_buffered(GTK_WIDGET(window->terminal), false);
 -- 
-2.21.0
+2.20.1
 
 
-From d54f3a1a1223e66a0631b739975bbce592eee62e Mon Sep 17 00:00:00 2001
+From 2cf8143eed208ff852371eb8b8505a79a58af1a3 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 4/9] Add a property to configure the scroll speed
@@ -345,10 +345,10 @@ index 9ab873c17bfc..7b94f4df9a30 100644
  vte_terminal_get_scrollback_lines
  vte_terminal_set_font
 diff --git a/src/vte.cc b/src/vte.cc
-index 802ce6df34a6..49e4007090d2 100644
+index cef9a05be18a..3ae3c8b33c00 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -9462,6 +9462,7 @@ void
+@@ -9452,6 +9452,7 @@ void
  Terminal::widget_scroll(GdkEventScroll *event)
  {
  	gdouble delta_x, delta_y;
@@ -356,7 +356,7 @@ index 802ce6df34a6..49e4007090d2 100644
  	gdouble v;
  	gint cnt, i;
  	int button;
-@@ -9515,7 +9516,13 @@ Terminal::widget_scroll(GdkEventScroll *event)
+@@ -9505,7 +9506,13 @@ Terminal::widget_scroll(GdkEventScroll *event)
  		return;
  	}
  
@@ -371,7 +371,7 @@ index 802ce6df34a6..49e4007090d2 100644
  	_vte_debug_print(VTE_DEBUG_EVENTS,
  			"Scroll speed is %d lines per non-smooth scroll unit\n",
  			(int) v);
-@@ -9776,6 +9783,16 @@ Terminal::decscusr_cursor_shape()
+@@ -9766,6 +9773,16 @@ Terminal::decscusr_cursor_shape()
          }
  }
  
@@ -404,7 +404,7 @@ index abf1a38cb20d..c8ba72023370 100644
  _VTE_PUBLIC
  void vte_terminal_set_scrollback_lines(VteTerminal *terminal,
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 4f67c186d245..be3304027c1b 100644
+index 03570d4c5554..b905b82b2514 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -517,6 +517,9 @@ vte_terminal_get_property (GObject *object,
@@ -427,7 +427,7 @@ index 4f67c186d245..be3304027c1b 100644
                  case PROP_SCROLLBACK_LINES:
                          vte_terminal_set_scrollback_lines (terminal, g_value_get_uint (value));
                          break;
-@@ -1564,6 +1570,21 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -1562,6 +1568,21 @@ vte_terminal_class_init(VteTerminalClass *klass)
                                        TRUE,
                                        (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
  
@@ -449,7 +449,7 @@ index 4f67c186d245..be3304027c1b 100644
          /**
           * VteTerminal:scrollback-lines:
           *
-@@ -4113,6 +4134,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
+@@ -4111,6 +4132,30 @@ vte_terminal_get_row_count(VteTerminal *terminal)
  	return IMPL(terminal)->m_row_count;
  }
  
@@ -493,7 +493,7 @@ index 126d29326f11..b2c9edfa8246 100644
          PROP_SCROLL_ON_KEYSTROKE,
          PROP_SCROLL_ON_OUTPUT,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index eb2cda249ee1..17c844137e31 100644
+index dd4bd37c38e1..9cc246338151 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -418,6 +418,7 @@ public:
@@ -504,19 +504,19 @@ index eb2cda249ee1..17c844137e31 100644
          vte::grid::row_t m_scrollback_lines;
  
          /* Restricted scrolling */
-@@ -1148,6 +1149,7 @@ public:
-         bool set_pty(VtePty *pty,
-                      bool proces_remaining = true);
+@@ -1147,6 +1148,7 @@ public:
+         bool set_mouse_autohide(bool autohide);
+         bool set_pty(VtePty *pty);
          bool set_rewrap_on_resize(bool rewrap);
 +        bool set_scroll_speed(unsigned int scroll_speed);
          bool set_scrollback_lines(long lines);
          bool set_scroll_on_keystroke(bool scroll);
          bool set_scroll_on_output(bool scroll);
 -- 
-2.21.0
+2.20.1
 
 
-From 817a1f9047b62a72285e5c7a2905f1587f56b520 Mon Sep 17 00:00:00 2001
+From 97a9a62f6b99292c1246f8df4ba32bb44728928a Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 5/9] Test the scroll-speed property
@@ -528,18 +528,18 @@ https://bugzilla.redhat.com/show_bug.cgi?id=1103380
  2 files changed, 8 insertions(+)
 
 diff --git a/bindings/vala/app.vala b/bindings/vala/app.vala
-index 138d453d5d98..61b8ec8edd24 100644
+index 634b8ddeeb91..c984b868246d 100644
 --- a/bindings/vala/app.vala
 +++ b/bindings/vala/app.vala
 @@ -335,6 +335,7 @@ class Window : Gtk.ApplicationWindow
-     terminal.set_rewrap_on_resize(!App.Options.no_rewrap);
+     terminal.set_rewrap_on_resize(!Options.no_rewrap);
      terminal.set_scroll_on_output(false);
      terminal.set_scroll_on_keystroke(true);
-+    terminal.set_scroll_speed(App.Options.scroll_speed);
-     terminal.set_scrollback_lines(App.Options.scrollback_lines);
++    terminal.set_scroll_speed(Options.scroll_speed);
+     terminal.set_scrollback_lines(Options.scrollback_lines);
  
      /* Style */
-@@ -858,6 +859,7 @@ class App : Gtk.Application
+@@ -857,6 +858,7 @@ class App : Gtk.Application
      public static bool object_notifications = false;
      public static string? output_filename = null;
      public static bool reverse = false;
@@ -547,7 +547,7 @@ index 138d453d5d98..61b8ec8edd24 100644
      public static int scrollback_lines = 512;
      public static int transparency_percent = 0;
      public static bool version = false;
-@@ -1051,6 +1053,8 @@ class App : Gtk.Application
+@@ -1050,6 +1052,8 @@ class App : Gtk.Application
          "Save terminal contents to file at exit", null },
        { "reverse", 0, 0, OptionArg.NONE, ref reverse,
          "Reverse foreground/background colors", null },
@@ -557,7 +557,7 @@ index 138d453d5d98..61b8ec8edd24 100644
          "Specify the number of scrollback-lines", null },
        { "transparent", 'T', 0, OptionArg.INT, ref transparency_percent,
 diff --git a/src/app/app.cc b/src/app/app.cc
-index db022476e95e..9dbd3d21c3cb 100644
+index 8ae589ad2449..589bd5679acd 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
 @@ -93,6 +93,7 @@ public:
@@ -577,7 +577,7 @@ index db022476e95e..9dbd3d21c3cb 100644
                          { "scrollback-lines", 'n', 0, G_OPTION_ARG_INT, &scrollback_lines,
                            "Specify the number of scrollback-lines (-1 for infinite)", nullptr },
                          { "transparent", 'T', 0, G_OPTION_ARG_INT, &transparency_percent,
-@@ -1939,6 +1942,7 @@ vteapp_window_constructed(GObject *object)
+@@ -1937,6 +1940,7 @@ vteapp_window_constructed(GObject *object)
          vte_terminal_set_rewrap_on_resize(window->terminal, !options.no_rewrap);
          vte_terminal_set_scroll_on_output(window->terminal, false);
          vte_terminal_set_scroll_on_keystroke(window->terminal, true);
@@ -586,10 +586,10 @@ index db022476e95e..9dbd3d21c3cb 100644
          vte_terminal_set_text_blink_mode(window->terminal, options.text_blink_mode);
  
 -- 
-2.21.0
+2.20.1
 
 
-From 9e2b4809052e1c4d38a9355d1171da38d0b1445e Mon Sep 17 00:00:00 2001
+From e63c5ce0cb27e98c81047bfe6bc18baf96173511 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 6/9] Support preexec notifications from an interactive shell
@@ -622,12 +622,12 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711060
  7 files changed, 35 insertions(+), 2 deletions(-)
 
 diff --git a/src/vte.cc b/src/vte.cc
-index 49e4007090d2..7b00500b28a2 100644
+index 3ae3c8b33c00..1d5fe099530c 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10242,6 +10242,13 @@ Terminal::emit_pending_signals()
-                 m_notification_received = FALSE;
- 	}
+@@ -10231,6 +10231,13 @@ Terminal::emit_pending_signals()
+                 m_notification_received = false;
+         }
  
 +        if (m_shell_preexec) {
 +                _vte_debug_print (VTE_DEBUG_SIGNALS,
@@ -669,10 +669,10 @@ index c8ba72023370..585b3f112bda 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index be3304027c1b..86a496284ce9 100644
+index b905b82b2514..bed69be640f9 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
-@@ -736,6 +736,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -734,6 +734,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
  	klass->encoding_changed = NULL;
  	klass->char_size_changed = NULL;
  	klass->notification_received = NULL;
@@ -680,7 +680,7 @@ index be3304027c1b..86a496284ce9 100644
  	klass->window_title_changed = NULL;
  	klass->icon_title_changed = NULL;
  	klass->selection_changed = NULL;
-@@ -831,6 +832,23 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -829,6 +830,23 @@ vte_terminal_class_init(VteTerminalClass *klass)
                               G_TYPE_NONE,
                               2, G_TYPE_STRING, G_TYPE_STRING);
  
@@ -717,7 +717,7 @@ index b2c9edfa8246..136ffa3b534d 100644
          SIGNAL_TEXT_INSERTED,
          SIGNAL_TEXT_MODIFIED,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index 17c844137e31..e9a346b617b8 100644
+index 9cc246338151..db8afddb04b0 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -545,6 +545,8 @@ public:
@@ -730,7 +730,7 @@ index 17c844137e31..e9a346b617b8 100644
          std::string m_current_directory_uri{};
          std::string m_current_file_uri{};
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index fbbf4f032f48..1210365679ac 100644
+index 942ae5126a3e..d129ad783799 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -1360,6 +1360,10 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
@@ -745,10 +745,10 @@ index fbbf4f032f48..1210365679ac 100644
  
  bool
 -- 
-2.21.0
+2.20.1
 
 
-From 00f5cd9d9137247ce0dc188b68665a193968047b Mon Sep 17 00:00:00 2001
+From 26f91a29caa140eea0bb72a7d775875181e94965 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
 Subject: [PATCH 7/9] Test the shell-preexec signal
@@ -761,7 +761,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711060
  2 files changed, 13 insertions(+)
 
 diff --git a/bindings/vala/app.vala b/bindings/vala/app.vala
-index 61b8ec8edd24..12114e2f445e 100644
+index c984b868246d..83af686be106 100644
 --- a/bindings/vala/app.vala
 +++ b/bindings/vala/app.vala
 @@ -310,6 +310,7 @@ class Window : Gtk.ApplicationWindow
@@ -771,7 +771,7 @@ index 61b8ec8edd24..12114e2f445e 100644
 +    terminal.shell_preexec.connect(shell_preexec_cb);
  
      /* Settings */
-     if (App.Options.no_double_buffer)
+     if (Options.no_double_buffer)
 @@ -788,6 +789,11 @@ class Window : Gtk.ApplicationWindow
      print ("[%s]: %s\n", summary, body);
    }
@@ -785,10 +785,10 @@ index 61b8ec8edd24..12114e2f445e 100644
  
  class App : Gtk.Application
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 9dbd3d21c3cb..77fe1fa09eaf 100644
+index 589bd5679acd..df0856497f73 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -1684,6 +1684,12 @@ notification_received_cb(VteTerminal *terminal,
+@@ -1682,6 +1682,12 @@ notification_received_cb(VteTerminal *terminal,
          g_print("[%s]: %s\n", summary, body);
  }
  
@@ -801,7 +801,7 @@ index 9dbd3d21c3cb..77fe1fa09eaf 100644
  static void
  window_lower_window_cb(VteTerminal* terminal,
                         VteappWindow* window)
-@@ -1913,6 +1919,7 @@ vteapp_window_constructed(GObject *object)
+@@ -1911,6 +1917,7 @@ vteapp_window_constructed(GObject *object)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
          g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
@@ -810,10 +810,10 @@ index 9dbd3d21c3cb..77fe1fa09eaf 100644
          /* Settings */
          if (options.no_double_buffer)
 -- 
-2.21.0
+2.20.1
 
 
-From 49db30c4531daddf9265bf2a81218c302dde5c51 Mon Sep 17 00:00:00 2001
+From fb89254b387f811a6fd1eda3b7b2449417daf54e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
 Subject: [PATCH 8/9] Support precmd notifications from an interactive shell
@@ -842,10 +842,10 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711060
  7 files changed, 33 insertions(+), 3 deletions(-)
 
 diff --git a/src/vte.cc b/src/vte.cc
-index 7b00500b28a2..3b8517682278 100644
+index 1d5fe099530c..459f675fd55c 100644
 --- a/src/vte.cc
 +++ b/src/vte.cc
-@@ -10249,6 +10249,13 @@ Terminal::emit_pending_signals()
+@@ -10238,6 +10238,13 @@ Terminal::emit_pending_signals()
                  m_shell_preexec = FALSE;
          }
  
@@ -890,10 +890,10 @@ index 585b3f112bda..cb265294c96f 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 86a496284ce9..146173a3423f 100644
+index bed69be640f9..d94e47e379f8 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
-@@ -736,6 +736,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -734,6 +734,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
  	klass->encoding_changed = NULL;
  	klass->char_size_changed = NULL;
  	klass->notification_received = NULL;
@@ -901,7 +901,7 @@ index 86a496284ce9..146173a3423f 100644
  	klass->shell_preexec = NULL;
  	klass->window_title_changed = NULL;
  	klass->icon_title_changed = NULL;
-@@ -832,6 +833,23 @@ vte_terminal_class_init(VteTerminalClass *klass)
+@@ -830,6 +831,23 @@ vte_terminal_class_init(VteTerminalClass *klass)
                               G_TYPE_NONE,
                               2, G_TYPE_STRING, G_TYPE_STRING);
  
@@ -938,7 +938,7 @@ index 136ffa3b534d..bae75f4b1f6a 100644
          SIGNAL_TEXT_DELETED,
          SIGNAL_TEXT_INSERTED,
 diff --git a/src/vteinternal.hh b/src/vteinternal.hh
-index e9a346b617b8..92509fa5bf53 100644
+index db8afddb04b0..d81ac011dba5 100644
 --- a/src/vteinternal.hh
 +++ b/src/vteinternal.hh
 @@ -545,6 +545,7 @@ public:
@@ -950,7 +950,7 @@ index e9a346b617b8..92509fa5bf53 100644
  
          std::string m_window_title{};
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index 1210365679ac..0aa6756f1904 100644
+index d129ad783799..d50439dbf0c7 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -1361,7 +1361,9 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
@@ -965,10 +965,10 @@ index 1210365679ac..0aa6756f1904 100644
          }
  }
 -- 
-2.21.0
+2.20.1
 
 
-From cd29674f7db2ef239fe2160b2aac4e803b7c4497 Mon Sep 17 00:00:00 2001
+From 19dec41cd5d5c42778a807cf43f52476ede2ab0f Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
 Subject: [PATCH 9/9] Test the shell-precmd signal
@@ -981,7 +981,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711060
  2 files changed, 13 insertions(+)
 
 diff --git a/bindings/vala/app.vala b/bindings/vala/app.vala
-index 12114e2f445e..169302460c68 100644
+index 83af686be106..300384f5c74b 100644
 --- a/bindings/vala/app.vala
 +++ b/bindings/vala/app.vala
 @@ -310,6 +310,7 @@ class Window : Gtk.ApplicationWindow
@@ -1005,10 +1005,10 @@ index 12114e2f445e..169302460c68 100644
    {
      print("[shell] executing command\n");
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 77fe1fa09eaf..fa7bc0d20004 100644
+index df0856497f73..37e06daf742f 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -1684,6 +1684,12 @@ notification_received_cb(VteTerminal *terminal,
+@@ -1682,6 +1682,12 @@ notification_received_cb(VteTerminal *terminal,
          g_print("[%s]: %s\n", summary, body);
  }
  
@@ -1021,7 +1021,7 @@ index 77fe1fa09eaf..fa7bc0d20004 100644
  static void
  shell_preexec_cb(VteTerminal *terminal)
  {
-@@ -1919,6 +1925,7 @@ vteapp_window_constructed(GObject *object)
+@@ -1917,6 +1923,7 @@ vteapp_window_constructed(GObject *object)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
          g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
@@ -1030,5 +1030,5 @@ index 77fe1fa09eaf..fa7bc0d20004 100644
  
          /* Settings */
 -- 
-2.21.0
+2.20.1
 
