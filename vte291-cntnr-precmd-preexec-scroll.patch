@@ -1,7 +1,7 @@
-From e4f4b9498dda3fa850bc9d40d8e0537b533c502e Mon Sep 17 00:00:00 2001
+From b499620a43f69fe899210a9cba509a6b3999c4a4 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
-Subject: [PATCH 1/9] Add sequences and signals for desktop notification
+Subject: [PATCH 01/10] Add sequences and signals for desktop notification
 
 Add sequences
   OSC 777 ; notify ; SUMMARY ; BODY BEL
@@ -23,8 +23,8 @@ https://bugzilla.gnome.org/show_bug.cgi?id=711059
  src/vtegtk.cc         | 21 +++++++++++++++++++++
  src/vtegtk.hh         |  1 +
  src/vteinternal.hh    |  8 ++++++++
- src/vteseq.cc         | 33 ++++++++++++++++++++++++++++++++-
- 7 files changed, 75 insertions(+), 2 deletions(-)
+ src/vteseq.cc         | 32 +++++++++++++++++++++++++++++++-
+ 7 files changed, 74 insertions(+), 2 deletions(-)
 
 diff --git a/src/marshal.list b/src/marshal.list
 index 1e4d0c1b6476..3385b4759713 100644
@@ -151,10 +151,10 @@ index 58cb0479c5c4..dd4bd37c38e1 100644
                         vte::parser::StringTokeniser::const_iterator& token,
                         vte::parser::StringTokeniser::const_iterator const& endtoken,
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index d596d8b9f56f..942ae5126a3e 100644
+index d596d8b9f56f..fcc2cc872f4c 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
-@@ -1334,6 +1334,34 @@ Terminal::delete_lines(vte::grid::row_t param)
+@@ -1334,6 +1334,33 @@ Terminal::delete_lines(vte::grid::row_t param)
          m_text_deleted_flag = TRUE;
  }
  
@@ -163,9 +163,8 @@ index d596d8b9f56f..942ae5126a3e 100644
 +                                 vte::parser::StringTokeniser::const_iterator& token,
 +                                 vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept
 +{
-+        if (token == endtoken) {
++        if (token == endtoken)
 +                return;
-+        }
 +
 +        if (*token == "notify") {
 +                ++token;
@@ -189,7 +188,7 @@ index d596d8b9f56f..942ae5126a3e 100644
  bool
  Terminal::get_osc_color_index(int osc,
                                          int value,
-@@ -6411,6 +6439,10 @@ Terminal::OSC(vte::parser::Sequence const& seq)
+@@ -6411,6 +6438,10 @@ Terminal::OSC(vte::parser::Sequence const& seq)
                  reset_color(VTE_HIGHLIGHT_FG, VTE_COLOR_SOURCE_ESCAPE);
                  break;
  
@@ -200,7 +199,7 @@ index d596d8b9f56f..942ae5126a3e 100644
          case VTE_OSC_XTERM_SET_ICON_TITLE:
          case VTE_OSC_XTERM_SET_XPROPERTY:
          case VTE_OSC_XTERM_SET_COLOR_MOUSE_CURSOR_FG:
-@@ -6451,7 +6483,6 @@ Terminal::OSC(vte::parser::Sequence const& seq)
+@@ -6451,7 +6482,6 @@ Terminal::OSC(vte::parser::Sequence const& seq)
          case VTE_OSC_URXVT_SET_FONT_BOLD_ITALIC:
          case VTE_OSC_URXVT_VIEW_UP:
          case VTE_OSC_URXVT_VIEW_DOWN:
@@ -212,10 +211,10 @@ index d596d8b9f56f..942ae5126a3e 100644
 2.20.1
 
 
-From 64d5096aeb6bb49581f9cc54851afa3d54506289 Mon Sep 17 00:00:00 2001
+From 4ad3660c4d2ec7752d665f6b12a46498a3b595d1 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
-Subject: [PATCH 2/9] vte.sh: Emit OSC 777 from PROMPT_COMMAND
+Subject: [PATCH 02/10] vte.sh: Emit OSC 777 from PROMPT_COMMAND
 
 For some reason, the three consecutive backslashes break the parsing.
 As Christian Persch suggested, replacing the double quotes with
@@ -247,10 +246,10 @@ index 6d1a8734c479..b75c6dac6f6e 100644
 2.20.1
 
 
-From 64f46c2a7a5d51cefdffb928855a0d86d5204480 Mon Sep 17 00:00:00 2001
+From 2c3e7136a7ead33a49c8190ceb3c7dcc22dc9f2d Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
-Subject: [PATCH 3/9] Test the notification-received signal
+Subject: [PATCH 03/10] Test the notification-received signal
 
 ---
  bindings/vala/app.vala |  7 +++++++
@@ -314,10 +313,10 @@ index 495bdcfa3768..8ae589ad2449 100644
 2.20.1
 
 
-From 2cf8143eed208ff852371eb8b8505a79a58af1a3 Mon Sep 17 00:00:00 2001
+From 0cb697eee07433766360a7e85b6f0d2f520a75bf Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
-Subject: [PATCH 4/9] Add a property to configure the scroll speed
+Subject: [PATCH 04/10] Add a property to configure the scroll speed
 
 By default, it is set to zero which gives the current behaviour of
 moving the buffer by a function of the number of visible rows.
@@ -516,10 +515,10 @@ index dd4bd37c38e1..9cc246338151 100644
 2.20.1
 
 
-From 97a9a62f6b99292c1246f8df4ba32bb44728928a Mon Sep 17 00:00:00 2001
+From a97c47e18b9e244200e41203f6db439aa1b93b3a Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
-Subject: [PATCH 5/9] Test the scroll-speed property
+Subject: [PATCH 05/10] Test the scroll-speed property
 
 https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 ---
@@ -589,10 +588,10 @@ index 8ae589ad2449..589bd5679acd 100644
 2.20.1
 
 
-From e63c5ce0cb27e98c81047bfe6bc18baf96173511 Mon Sep 17 00:00:00 2001
+From 11361619738505e4870a1de73611a33ffe4892fb Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
-Subject: [PATCH 6/9] Support preexec notifications from an interactive shell
+Subject: [PATCH 06/10] Support preexec notifications from an interactive shell
 
 Add sequences
   OSC 777 ; preexec BEL
@@ -730,10 +729,10 @@ index 9cc246338151..db8afddb04b0 100644
          std::string m_current_directory_uri{};
          std::string m_current_file_uri{};
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index 942ae5126a3e..d129ad783799 100644
+index fcc2cc872f4c..7ce20e7d91bc 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
-@@ -1360,6 +1360,10 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
+@@ -1359,6 +1359,10 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
                  m_notification_body = *token;
                  return;
          }
@@ -748,10 +747,10 @@ index 942ae5126a3e..d129ad783799 100644
 2.20.1
 
 
-From 26f91a29caa140eea0bb72a7d775875181e94965 Mon Sep 17 00:00:00 2001
+From 0483ee805109e64912de062ffdd08d658016d372 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
-Subject: [PATCH 7/9] Test the shell-preexec signal
+Subject: [PATCH 07/10] Test the shell-preexec signal
 
 https://bugzilla.gnome.org/show_bug.cgi?id=711059
 https://bugzilla.gnome.org/show_bug.cgi?id=711060
@@ -813,10 +812,10 @@ index 589bd5679acd..df0856497f73 100644
 2.20.1
 
 
-From fb89254b387f811a6fd1eda3b7b2449417daf54e Mon Sep 17 00:00:00 2001
+From 1f8b311035b6b0d2f194917db7c84c18a893052e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
-Subject: [PATCH 8/9] Support precmd notifications from an interactive shell
+Subject: [PATCH 08/10] Support precmd notifications from an interactive shell
 
 Add sequences
   OSC 777 ; precmd BEL
@@ -950,10 +949,10 @@ index db8afddb04b0..d81ac011dba5 100644
  
          std::string m_window_title{};
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index d129ad783799..d50439dbf0c7 100644
+index 7ce20e7d91bc..8893ba53698a 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
-@@ -1361,7 +1361,9 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
+@@ -1360,7 +1360,9 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
                  return;
          }
  
@@ -968,10 +967,10 @@ index d129ad783799..d50439dbf0c7 100644
 2.20.1
 
 
-From 19dec41cd5d5c42778a807cf43f52476ede2ab0f Mon Sep 17 00:00:00 2001
+From 66b6900d5e188611263595db8d5cee61cccec258 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
-Subject: [PATCH 9/9] Test the shell-precmd signal
+Subject: [PATCH 09/10] Test the shell-precmd signal
 
 https://bugzilla.gnome.org/show_bug.cgi?id=711059
 https://bugzilla.gnome.org/show_bug.cgi?id=711060
@@ -1029,6 +1028,264 @@ index df0856497f73..37e06daf742f 100644
          g_signal_connect(window->terminal, "shell-preexec", G_CALLBACK(shell_preexec_cb), NULL);
  
          /* Settings */
+-- 
+2.20.1
+
+
+From c28e1af61756ce2c4cffed0eec11e08928d75d92 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Mon, 10 Jun 2019 20:30:18 +0200
+Subject: [PATCH 10/10] Support tracking the active container inside the
+ terminal
+
+Add sequences
+  OSC 777 ; container ; push ; NAME ; RUNTIME BEL
+  OSC 777 ; container ; push ; NAME ; RUNTIME ST
+  OSC 777 ; container ; pop ; NAME ; RUNTIME BEL
+  OSC 777 ; container ; pop ; NAME ; RUNTIME ST
+
+that let container tools notify the terminal emulator when entering and
+leaving a container environment. The RUNTIME argument namespaces the
+NAME and identifies the container tooling being used. eg., docker,
+flatpak, podman, toolbox, etc..
+
+The OSC 777 escape sequence is taken from Enlightenment's Terminology:
+https://phab.enlightenment.org/T1765
+
+It's a VTE-specific extension until a standard escape sequence is
+agreed upon across multiple different terminal emulators [1].
+
+[1] https://gitlab.freedesktop.org/terminal-wg/specifications/issues/17
+---
+ src/vte.cc            |  9 ++++++
+ src/vte/vteterminal.h |  4 +++
+ src/vtegtk.cc         | 65 +++++++++++++++++++++++++++++++++++++++++++
+ src/vtegtk.hh         |  2 ++
+ src/vteinternal.hh    | 16 +++++++++++
+ src/vteseq.cc         | 31 +++++++++++++++++++++
+ 6 files changed, 127 insertions(+)
+
+diff --git a/src/vte.cc b/src/vte.cc
+index 459f675fd55c..65278d45f9bf 100644
+--- a/src/vte.cc
++++ b/src/vte.cc
+@@ -10259,6 +10259,15 @@ Terminal::emit_pending_signals()
+                 m_window_title_changed = false;
+ 	}
+ 
++        if (m_containers_changed) {
++                _vte_debug_print(VTE_DEBUG_SIGNALS,
++                                 "Notifying `current-container-name' and `current-container-runtime'.\n");
++
++                g_object_notify_by_pspec(object, pspecs[PROP_CURRENT_CONTAINER_NAME]);
++                g_object_notify_by_pspec(object, pspecs[PROP_CURRENT_CONTAINER_RUNTIME]);
++                m_containers_changed = false;
++        }
++
+ 	if (m_current_directory_uri_changed) {
+                 if (m_current_directory_uri != m_current_directory_uri_pending) {
+                         m_current_directory_uri.swap(m_current_directory_uri_pending);
+diff --git a/src/vte/vteterminal.h b/src/vte/vteterminal.h
+index cb265294c96f..32c0538f37dd 100644
+--- a/src/vte/vteterminal.h
++++ b/src/vte/vteterminal.h
+@@ -459,6 +459,10 @@ glong vte_terminal_get_column_count(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
+ _VTE_PUBLIC
+ const char *vte_terminal_get_window_title(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
+ _VTE_PUBLIC
++const char *vte_terminal_get_current_container_name(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
++_VTE_PUBLIC
++const char *vte_terminal_get_current_container_runtime(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
++_VTE_PUBLIC
+ const char *vte_terminal_get_current_directory_uri(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
+ _VTE_PUBLIC
+ const char *vte_terminal_get_current_file_uri(VteTerminal *terminal) _VTE_GNUC_NONNULL(1);
+diff --git a/src/vtegtk.cc b/src/vtegtk.cc
+index d94e47e379f8..342ccfc98a9e 100644
+--- a/src/vtegtk.cc
++++ b/src/vtegtk.cc
+@@ -478,6 +478,12 @@ vte_terminal_get_property (GObject *object,
+                 case PROP_CURSOR_BLINK_MODE:
+                         g_value_set_enum (value, vte_terminal_get_cursor_blink_mode (terminal));
+                         break;
++                case PROP_CURRENT_CONTAINER_NAME:
++                        g_value_set_string (value, vte_terminal_get_current_container_name (terminal));
++                        break;
++                case PROP_CURRENT_CONTAINER_RUNTIME:
++                        g_value_set_string (value, vte_terminal_get_current_container_runtime (terminal));
++                        break;
+                 case PROP_CURRENT_DIRECTORY_URI:
+                         g_value_set_string (value, vte_terminal_get_current_directory_uri (terminal));
+                         break;
+@@ -1681,6 +1687,27 @@ vte_terminal_class_init(VteTerminalClass *klass)
+                                      NULL,
+                                      (GParamFlags) (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
+ 
++        /**
++         * VteTerminal:current-container-name:
++         *
++         * The name of the current container, or %NULL if unset.
++         */
++        pspecs[PROP_CURRENT_CONTAINER_NAME] =
++                g_param_spec_string ("current-container-name", NULL, NULL,
++                                     NULL,
++                                     (GParamFlags) (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
++
++        /**
++         * VteTerminal:current-container-runtime:
++         *
++         * The name of the runtime toolset used to set up the current
++         * container, or %NULL if unset.
++         */
++        pspecs[PROP_CURRENT_CONTAINER_RUNTIME] =
++                g_param_spec_string ("current-container-runtime", NULL, NULL,
++                                     NULL,
++                                     (GParamFlags) (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
++
+         /**
+          * VteTerminal:current-directory-uri:
+          *
+@@ -3556,6 +3583,44 @@ vte_terminal_get_column_count(VteTerminal *terminal)
+ 	return IMPL(terminal)->m_column_count;
+ }
+ 
++/**
++ * vte_terminal_get_current_container_name:
++ * @terminal: a #VteTerminal
++ *
++ * Returns: (nullable) (transfer none): the name of the current
++ *   container, or %NULL
++ */
++const char *
++vte_terminal_get_current_container_name(VteTerminal *terminal)
++{
++        g_return_val_if_fail(VTE_IS_TERMINAL(terminal), NULL);
++        auto impl = IMPL(terminal);
++        if (impl->m_containers.empty())
++                return NULL;
++
++        const VteContainer &container = impl->m_containers.top();
++        return container.m_name.c_str();
++}
++
++/**
++ * vte_terminal_get_current_container_runtime:
++ * @terminal: a #VteTerminal
++ *
++ * Returns: (nullable) (transfer none): the name of the runtime
++ *   toolset used to set up the current container, or %NULL
++ */
++const char *
++vte_terminal_get_current_container_runtime(VteTerminal *terminal)
++{
++        g_return_val_if_fail(VTE_IS_TERMINAL(terminal), NULL);
++        auto impl = IMPL(terminal);
++        if (impl->m_containers.empty())
++                return NULL;
++
++        const VteContainer &container = impl->m_containers.top();
++        return container.m_runtime.c_str();
++}
++
+ /**
+  * vte_terminal_get_current_directory_uri:
+  * @terminal: a #VteTerminal
+diff --git a/src/vtegtk.hh b/src/vtegtk.hh
+index bae75f4b1f6a..d6565a9d1d16 100644
+--- a/src/vtegtk.hh
++++ b/src/vtegtk.hh
+@@ -76,6 +76,8 @@ enum {
+         PROP_CJK_AMBIGUOUS_WIDTH,
+         PROP_CURSOR_BLINK_MODE,
+         PROP_CURSOR_SHAPE,
++        PROP_CURRENT_CONTAINER_NAME,
++        PROP_CURRENT_CONTAINER_RUNTIME,
+         PROP_CURRENT_DIRECTORY_URI,
+         PROP_CURRENT_FILE_URI,
+         PROP_DELETE_BINDING,
+diff --git a/src/vteinternal.hh b/src/vteinternal.hh
+index d81ac011dba5..f0c4a455cea3 100644
+--- a/src/vteinternal.hh
++++ b/src/vteinternal.hh
+@@ -40,6 +40,7 @@
+ 
+ #include <list>
+ #include <queue>
++#include <stack>
+ #include <string>
+ #include <vector>
+ 
+@@ -109,6 +110,18 @@ typedef enum _VteCharacterReplacement {
+         VTE_CHARACTER_REPLACEMENT_BRITISH
+ } VteCharacterReplacement;
+ 
++struct VteContainer {
++public:
++        VteContainer(const std::string &name, const std::string &runtime) :
++                m_name{name},
++                m_runtime{runtime}
++        {
++        }
++
++        std::string m_name;
++        std::string m_runtime;
++};
++
+ typedef struct _VtePaletteColor {
+ 	struct {
+ 		vte::color::rgb color;
+@@ -540,6 +553,9 @@ public:
+         gboolean m_cursor_moved_pending;
+         gboolean m_contents_changed_pending;
+ 
++        bool m_containers_changed{false};
++        std::stack<VteContainer> m_containers;
++
+         /* desktop notification */
+         bool m_notification_received{false};
+         std::string m_notification_summary;
+diff --git a/src/vteseq.cc b/src/vteseq.cc
+index 8893ba53698a..dcee8767b63f 100644
+--- a/src/vteseq.cc
++++ b/src/vteseq.cc
+@@ -1342,6 +1342,37 @@ Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
+         if (token == endtoken)
+                 return;
+ 
++        if (*token == "container") {
++                ++token;
++
++                if (token == endtoken)
++                        return;
++
++                const std::string sub_command = *token;
++                ++token;
++
++                if (sub_command == "pop") {
++                        if (!m_containers.empty()) {
++                                m_containers.pop();
++                                m_containers_changed = true;
++                        }
++                } else if (sub_command == "push") {
++                        if (token == endtoken)
++                                return;
++
++                        const std::string name = *token;
++                        ++token;
++
++                        if (token == endtoken)
++                                return;
++
++                        const std::string runtime = *token;
++
++                        m_containers.emplace(name, runtime);
++                        m_containers_changed = true;
++                }
++        }
++
+         if (*token == "notify") {
+                 ++token;
+ 
 -- 
 2.20.1
 

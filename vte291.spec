@@ -7,7 +7,7 @@
 
 Name:           vte291
 Version:        0.57.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -16,7 +16,7 @@ Source0:        http://download.gnome.org/sources/vte/0.57/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
-Patch100:       vte291-command-notify-scroll-speed.patch
+Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
@@ -67,7 +67,7 @@ emulator library.
 
 %prep
 %setup -q -n vte-%{version}
-%patch100 -p1 -b .command-notify-scroll-speed
+%patch100 -p1 -b .cntnr-precmd-preexec-scroll
 
 %build
 %meson --buildtype=plain -Ddocs=true
@@ -97,6 +97,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed Jun 19 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.57.0-2
+- Support tracking the active container inside the terminal
+
 * Tue Jun 18 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.57.0-1
 - Update to 0.57.0
 - Switch to the Meson build system
