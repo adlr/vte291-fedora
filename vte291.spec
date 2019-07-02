@@ -1,13 +1,15 @@
 %global apiver 2.91
 
+%global fribidi_version 1.0.0
+%global glib2_version 2.40.0
 %global gnutls_version 3.2.7
 %global gtk3_version 3.19.5
 %global pango_version 1.22.0
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.57.0
-Release:        2%{?dist}
+Version:        0.57.3
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -20,7 +22,11 @@ Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
+BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
+BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
+BuildRequires:  pkgconfig(glib-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(gnutls) >= %{gnutls_version}
+BuildRequires:  pkgconfig(gobject-2.0) >= %{glib2_version}
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
 BuildRequires:  gtk-doc
@@ -30,6 +36,8 @@ BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
 BuildRequires:  pkgconfig(pango) >= %{pango_version}
 BuildRequires:  vala
 
+Requires:       fribidi >= %{fribidi_version}
+Requires:       glib2 >= %{glib2_version}
 Requires:       gnutls%{?_isa} >= %{gnutls_version}
 Requires:       gtk3%{?_isa} >= %{gtk3_version}
 Requires:       pango >= %{pango_version}
@@ -97,6 +105,10 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Jul 02 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.57.3-1
+- Update to 0.57.3
+- Rebase downstream patches
+
 * Wed Jun 19 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.57.0-2
 - Support tracking the active container inside the terminal
 
