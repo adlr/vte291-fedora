@@ -9,7 +9,7 @@
 
 Name:           vte291
 Version:        0.57.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -105,6 +105,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 0.57.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Tue Jul 02 2019 Debarshi Ray <rishi@fedoraproject.org> - 0.57.3-1
 - Update to 0.57.3
 - Rebase downstream patches
