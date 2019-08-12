@@ -8,8 +8,8 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.57.3
-Release:        2%{?dist}
+Version:        0.57.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -105,6 +105,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Aug 12 2019 Kalev Lember <klember@redhat.com> - 0.57.90-1
+- Update to 0.57.90
+
 * Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 0.57.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
