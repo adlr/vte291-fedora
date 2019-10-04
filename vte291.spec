@@ -9,7 +9,7 @@
 
 Name:           vte291
 Version:        0.58.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -19,6 +19,10 @@ Source0:        http://download.gnome.org/sources/vte/0.58/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
+# Backport fix for crash due to out of bounds cursor position
+# https://bugzilla.redhat.com/show_bug.cgi?id=1756567
+# https://gitlab.gnome.org/GNOME/vte/issues/176
+Patch101:       0001-emulation-Ensure-the-cursor-remains-onscreen-when-mo.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
@@ -76,6 +80,7 @@ emulator library.
 %prep
 %setup -q -n vte-%{version}
 %patch100 -p1 -b .cntnr-precmd-preexec-scroll
+%patch101 -p1 -b .cursor-crash
 
 %build
 %meson --buildtype=plain -Ddocs=true
@@ -105,6 +110,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Oct 04 2019 Adam Williamson <awilliam@redhat.com> - 0.58.0-2
+- Backport fix for crash due to out of bounds cursor position (#1756567)
+
 * Mon Sep 09 2019 Kalev Lember <klember@redhat.com> - 0.58.0-1
 - Update to 0.58.0
 
