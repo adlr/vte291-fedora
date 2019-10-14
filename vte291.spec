@@ -8,7 +8,7 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.58.1
+Version:        0.58.2
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -105,6 +105,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Oct 14 2019 Kalev Lember <klember@redhat.com> - 0.58.2-1
+- Update to 0.58.2
+
 * Mon Oct 07 2019 Kalev Lember <klember@redhat.com> - 0.58.1-1
 - Update to 0.58.1
 
