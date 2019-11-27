@@ -8,7 +8,7 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.58.2
+Version:        0.58.3
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -78,6 +78,10 @@ emulator library.
 %patch100 -p1 -b .cntnr-precmd-preexec-scroll
 
 %build
+# Avoid overriding vte's own -fno-exceptions
+# https://gitlab.gnome.org/GNOME/gnome-build-meta/issues/207
+%global optflags %(echo %{optflags} | sed 's/-fexceptions //')
+
 %meson --buildtype=plain -Ddocs=true
 %meson_build
 
@@ -105,6 +109,10 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed Nov 27 2019 Kalev Lember <klember@redhat.com> - 0.58.3-1
+- Update to 0.58.3
+- Avoid overriding vte's own -fno-exceptions
+
 * Mon Oct 14 2019 Kalev Lember <klember@redhat.com> - 0.58.2-1
 - Update to 0.58.2
 
