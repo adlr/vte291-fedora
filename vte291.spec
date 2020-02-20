@@ -1,9 +1,9 @@
 %global apiver 2.91
 
 %global fribidi_version 1.0.0
-%global glib2_version 2.40.0
+%global glib2_version 2.52.0
 %global gnutls_version 3.2.7
-%global gtk3_version 3.19.5
+%global gtk3_version 3.20.0
 %global pango_version 1.22.0
 %global pcre2_version 10.21
 
