@@ -4,11 +4,13 @@
 %global glib2_version 2.52.0
 %global gnutls_version 3.2.7
 %global gtk3_version 3.20.0
+%global icu_uc_version 4.8
+%global libsystemd_version 220
 %global pango_version 1.22.0
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.59.0
+Version:        0.59.91
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -32,16 +34,21 @@ BuildRequires:  gperf
 BuildRequires:  gtk-doc
 BuildRequires:  meson
 BuildRequires:  pkgconfig(gtk+-3.0) >= %{gtk3_version}
+BuildRequires:  pkgconfig(icu-uc) >= %{icu_uc_version}
 BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
+BuildRequires:  pkgconfig(libsystemd) >= %{libsystemd_version}
 BuildRequires:  pkgconfig(pango) >= %{pango_version}
+BuildRequires:  systemd-rpm-macros
 BuildRequires:  vala
 
 Requires:       fribidi >= %{fribidi_version}
 Requires:       glib2 >= %{glib2_version}
 Requires:       gnutls%{?_isa} >= %{gnutls_version}
 Requires:       gtk3%{?_isa} >= %{gtk3_version}
+Requires:       libicu%{?_isa} >= %{icu_uc_version}
 Requires:       pango >= %{pango_version}
 Requires:       pcre2%{?_isa} >= %{pcre2_version}
+Requires:       systemd >= %{libsystemd_version}
 Requires:       vte-profile
 
 Conflicts:      gnome-terminal < 3.20.1-2
@@ -95,6 +102,8 @@ emulator library.
 %doc NEWS
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
+%{_libexecdir}/vte-urlencode-cwd
+%{_userunitdir}/vte-spawn-.scope.d
 
 %files devel
 %{_bindir}/vte-%{apiver}
@@ -106,9 +115,14 @@ emulator library.
 %{_datadir}/vala/
 
 %files -n vte-profile
+%{_sysconfdir}/profile.d/vte.csh
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Feb 20 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.59.91-1
+- Update to 0.59.91
+- Rebase downstream patches
+
 * Wed Feb 19 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.59.0-1
 - Update to 0.59.0
 - Rebase downstream patches
