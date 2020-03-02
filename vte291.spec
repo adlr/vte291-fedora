@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.59.92
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -119,6 +119,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Mar 02 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.59.92-2
+- Replace C1 controls with C0 to emit OSC 777 from PS0 (RH #1783802)
+
 * Mon Mar 02 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.59.92-1
 - Update to 0.59.92
 
