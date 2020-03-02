@@ -10,7 +10,7 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.59.91
+Version:        0.59.92
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -119,6 +119,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Mar 02 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.59.92-1
+- Update to 0.59.92
+
 * Thu Feb 20 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.59.91-1
 - Update to 0.59.91
 - Rebase downstream patches
