@@ -1,4 +1,4 @@
-From 0bdf015c691dc093abb6fabe15af1017c2e7dd49 Mon Sep 17 00:00:00 2001
+From c8ba0093065c94914b89a3f9fb9e4376ad58b7f2 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 01/10] Add sequences and signals for desktop notification
@@ -209,7 +209,7 @@ index 2d00ceec5509..2b69ca2c14f0 100644
 2.24.1
 
 
-From b3852a8ddf9e58fe5de0a8efd5ad7ab1785c284a Mon Sep 17 00:00:00 2001
+From c7e4f1adf7865025daa196ccb6b4344d6a79db55 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 02/10] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -245,7 +245,7 @@ index 8b3153da0f1a..d6769de82766 100644
 2.24.1
 
 
-From 0cf97482e460ad2f687413306704bad40f826d43 Mon Sep 17 00:00:00 2001
+From 25d0ab5656a5daeac72514c9f1c92ece170e1b19 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 03/10] Test the notification-received signal
@@ -312,7 +312,7 @@ index 0c7eed5d18f1..6086c0a65db2 100644
 2.24.1
 
 
-From b3873aa4ed2dc7b33f4dd746bc5ce84662703908 Mon Sep 17 00:00:00 2001
+From 9c4c531996654981621bfcd781402e9c9ababc5f Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 04/10] Add a property to configure the scroll speed
@@ -514,7 +514,7 @@ index ae4f705ea80d..9c0b8b454468 100644
 2.24.1
 
 
-From 8525c3b3986791f60bf42c880db1762dafe794c9 Mon Sep 17 00:00:00 2001
+From c7f5fe00027643b36beb0c2908bd63cfa03a3266 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 05/10] Test the scroll-speed property
@@ -587,7 +587,7 @@ index 6086c0a65db2..0c7a70bf6da5 100644
 2.24.1
 
 
-From 03909347c77ca2e36a3aa599a3130f9e4f03336d Mon Sep 17 00:00:00 2001
+From 58a73ba12f34b285c4170eabf38d2b6dd0fc6fe3 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 06/10] Support preexec notifications from an interactive shell
@@ -742,7 +742,7 @@ index 2b69ca2c14f0..d8866cbeb225 100644
 2.24.1
 
 
-From 2dbec5425751745e9d7042293a3fbefa07cc3a1c Mon Sep 17 00:00:00 2001
+From 96eae43fc1a6a767744c261ad7184ebf03d70a6d Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
 Subject: [PATCH 07/10] Test the shell-preexec signal
@@ -807,7 +807,7 @@ index 0c7a70bf6da5..2dece3ddb724 100644
 2.24.1
 
 
-From 2838c5729961f4aca45a4ad0d55dd8845a30bb7a Mon Sep 17 00:00:00 2001
+From 700985c7f169165329f44274636c048151c80d92 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
 Subject: [PATCH 08/10] Support precmd notifications from an interactive shell
@@ -962,7 +962,7 @@ index d8866cbeb225..f6669f853204 100644
 2.24.1
 
 
-From a7d3d63f068ac0dc12069b24697cd706838e3109 Mon Sep 17 00:00:00 2001
+From 2f4739dc840d8acddf15d7fa60594e04c24a17b2 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
 Subject: [PATCH 09/10] Test the shell-precmd signal
@@ -1027,7 +1027,7 @@ index 2dece3ddb724..960aadc3cdc8 100644
 2.24.1
 
 
-From 90c2ae926f1eb2c3066c6e56679767bd5fa03bc1 Mon Sep 17 00:00:00 2001
+From 89b06b1062b1af6fa43d6ea34d8da57f8038abcc Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Mon, 10 Jun 2019 20:30:18 +0200
 Subject: [PATCH 10/10] Support tracking the active container inside the
