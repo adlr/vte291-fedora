@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.60.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -102,7 +102,6 @@ emulator library.
 %doc NEWS
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
-%{_libexecdir}/vte-urlencode-cwd
 %{_userunitdir}/vte-spawn-.scope.d
 
 %files devel
@@ -115,10 +114,14 @@ emulator library.
 %{_datadir}/vala/
 
 %files -n vte-profile
+%{_libexecdir}/vte-urlencode-cwd
 %{_sysconfdir}/profile.d/vte.csh
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Sat Mar 21 2020 Kalev Lember <klember@redhat.com> - 0.60.0-2
+- Move vte-urlencode-cwd to vte-profile subpackage (#1815769)
+
 * Fri Mar 06 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.60.0-1
 - Update to 0.60.0
 
