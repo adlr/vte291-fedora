@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.60.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -20,6 +20,7 @@ Source0:        http://download.gnome.org/sources/vte/0.60/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
+# https://gitlab.gnome.org/GNOME/vte/-/issues/226
 Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
 
 BuildRequires:  gcc-c++
@@ -119,6 +120,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Apr 06 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.60.1-2
+- Improve legibility when using colours from the system theme
+
 * Tue Mar 31 2020 Kalev Lember <klember@redhat.com> - 0.60.1-1
 - Update to 0.60.1
 
