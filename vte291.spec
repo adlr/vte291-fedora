@@ -10,8 +10,8 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.60.0
-Release:        2%{?dist}
+Version:        0.60.1
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -119,6 +119,9 @@ emulator library.
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Mar 31 2020 Kalev Lember <klember@redhat.com> - 0.60.1-1
+- Update to 0.60.1
+
 * Sat Mar 21 2020 Kalev Lember <klember@redhat.com> - 0.60.0-2
 - Move vte-urlencode-cwd to vte-profile subpackage (#1815769)
 
