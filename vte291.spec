@@ -3,24 +3,23 @@
 %global fribidi_version 1.0.0
 %global glib2_version 2.52.0
 %global gnutls_version 3.2.7
-%global gtk3_version 3.20.0
+%global gtk3_version 3.24.22
 %global icu_uc_version 4.8
 %global libsystemd_version 220
 %global pango_version 1.22.0
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.60.3
-Release:        2%{?dist}
+Version:        0.61.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.60/vte-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/vte/0.61/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
-# https://gitlab.gnome.org/GNOME/vte/-/issues/226
 Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
 
 BuildRequires:  gcc-c++
@@ -90,10 +89,6 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %endif
 
 %build
-# Avoid overriding vte's own -fno-exceptions
-# https://gitlab.gnome.org/GNOME/gnome-build-meta/issues/207
-%global optflags %(echo %{optflags} | sed 's/-fexceptions //')
-
 %meson --buildtype=plain -Ddocs=true
 %meson_build
 
@@ -104,7 +99,6 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 
 %files -f vte-%{apiver}.lang
 %license COPYING.GPL3
-%doc NEWS
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
 %{_userunitdir}/vte-spawn-.scope.d
@@ -124,6 +118,10 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Sep 24 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.61.90-1
+- Update to 0.61.90
+- Rebase downstream patches
+
 * Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.60.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
