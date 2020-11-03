@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.62.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -21,6 +21,7 @@ Source0:        http://download.gnome.org/sources/vte/0.62/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
+Patch101:       %{name}-gcc11.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
@@ -83,6 +84,7 @@ emulator library.
 %prep
 %setup -q -n vte-%{version}
 %patch100 -p1 -b .cntnr-precmd-preexec-scroll
+%patch101 -p1 -b .gcc11
 %if 0%{?flatpak}
 # Install user units where systemd macros expect them
 sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
@@ -118,6 +120,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Nov 03 2020 Jeff Law <law@redhat.com> - 0.62.1-2
+- Fix bogus volatile caught by gcc-11
+
 * Thu Oct 08 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.62.1-1
 - Update to 0.62.1
 - Rebase downstream patches
