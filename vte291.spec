@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.62.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -120,6 +120,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed Dec 16 2020 Debarshi Ray <rishi@fedoraproject.org> - 0.62.1-3
+- Accommodate 'sudo toolbox' when tracking the active container
+
 * Tue Nov 03 2020 Jeff Law <law@redhat.com> - 0.62.1-2
 - Fix bogus volatile caught by gcc-11
 
