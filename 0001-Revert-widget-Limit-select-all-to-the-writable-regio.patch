@@ -1,0 +1,45 @@
+From 713732012fa06c26ce320cce732fe5bb56936b6c Mon Sep 17 00:00:00 2001
+From: Kalev Lember <klember@redhat.com>
+Date: Tue, 16 Feb 2021 16:30:44 +0100
+Subject: [PATCH] Revert "widget: Limit select-all to the writable region not
+ including the scrollback"
+
+... as decided by Fedora Workstation WG.
+
+https://pagure.io/fedora-workstation/issue/216
+
+This reverts commit 73713ec0644e232fb740170e399282be778d97f9.
+---
+ src/vte.cc | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/src/vte.cc b/src/vte.cc
+index 5a631d96..88f053ef 100644
+--- a/src/vte.cc
++++ b/src/vte.cc
+@@ -6719,10 +6719,7 @@ Terminal::maybe_end_selection()
+ /*
+  * Terminal::select_all:
+  *
+- * Selects all text within the terminal. Note that we only select the writable
+- * region, *not* the scrollback buffer, due to this potentially selecting so
+- * much data that putting it on the clipboard either hangs the process for a long
+- * time or even crash it directly. (FIXME!)
++ * Selects all text within the terminal (including the scrollback buffer).
+  */
+ void
+ Terminal::select_all()
+@@ -6731,8 +6728,8 @@ Terminal::select_all()
+ 
+ 	m_selecting_had_delta = TRUE;
+ 
+-        m_selection_resolved.set({m_screen->insert_delta, 0},
+-                                 {_vte_ring_next(m_screen->row_data), 0});
++        m_selection_resolved.set ({ _vte_ring_delta (m_screen->row_data), 0 },
++                                  { _vte_ring_next  (m_screen->row_data), 0 });
+ 
+ 	_vte_debug_print(VTE_DEBUG_SELECTION, "Selecting *all* text.\n");
+ 
+-- 
+2.29.2
+
