@@ -15,8 +15,8 @@ Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
-URL:            http://www.gnome.org/
-Source0:        http://download.gnome.org/sources/vte/0.62/vte-%{version}.tar.xz
+URL:            https://wiki.gnome.org/Apps/Terminal/VTE
+Source0:        https://download.gnome.org/sources/vte/0.62/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
@@ -122,6 +122,7 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %changelog
 * Tue Feb 16 2021 Kalev Lember <klember@redhat.com> - 0.62.3-1
 - Update to 0.62.3
+- Use https URLs for upstream
 
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.62.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
