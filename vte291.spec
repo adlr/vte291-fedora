@@ -10,8 +10,8 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.62.2
-Release:        2%{?dist}
+Version:        0.62.3
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -120,6 +120,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Feb 16 2021 Kalev Lember <klember@redhat.com> - 0.62.3-1
+- Update to 0.62.3
+
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.62.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
