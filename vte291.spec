@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.62.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -86,6 +86,7 @@ emulator library.
 
 %prep
 %setup -q -n vte-%{version}
+%patch0 -p1 -b .revert-select-all
 %patch100 -p1 -b .cntnr-precmd-preexec-scroll
 %patch101 -p1 -b .gcc11
 %if 0%{?flatpak}
@@ -123,10 +124,12 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Feb 18 2021 Kalev Lember <klember@redhat.com> - 0.62.3-2
+- Revert a change that limited select all, as decided by Workstation WG
+
 * Tue Feb 16 2021 Kalev Lember <klember@redhat.com> - 0.62.3-1
 - Update to 0.62.3
 - Use https URLs for upstream
-- Revert a change that limited select all, as decided by Workstation WG
 
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.62.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
