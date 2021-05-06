@@ -10,13 +10,13 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.63.91
+Version:        0.64.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
-Source0:        https://download.gnome.org/sources/vte/0.63/vte-%{version}.tar.xz
+Source0:        https://download.gnome.org/sources/vte/0.64/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
@@ -120,6 +120,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu May 06 2021 Debarshi Ray <rishi@fedoraproject.org> - 0.64.0-1
+- Update to 0.64.0
+
 * Thu May 06 2021 Debarshi Ray <rishi@fedoraproject.org> - 0.63.91-1
 - Update to 0.63.91
 - Rebase downstream patches
