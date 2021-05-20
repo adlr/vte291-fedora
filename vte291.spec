@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.64.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -120,6 +120,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu May 20 2021 Pete Walter <pwalter@fedoraproject.org> - 0.64.1-3
+- Rebuild for ICU 69
+
 * Fri May 07 2021 Debarshi Ray <rishi@fedoraproject.org> - 0.64.1-2
 - Add missing _VTE_CXX_NOEXCEPT in downstream patches
 
