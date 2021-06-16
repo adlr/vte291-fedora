@@ -1,4 +1,4 @@
-From d0292b797130694621e6af96728c7aa126b40bb9 Mon Sep 17 00:00:00 2001
+From b0b746ddf50375173d0b98baf12740dc910745d2 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 01/11] Add sequences and signals for desktop notification
@@ -71,7 +71,7 @@ index e705ece69ad6..668a7dbeae96 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 0a26f976649b..8c31a2895886 100644
+index c68a0f1ac388..e3274ff3df90 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -983,6 +983,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
@@ -212,10 +212,10 @@ index bde2fa7ba0ab..7ab65b6d204a 100644
          default:
                  break;
 -- 
-2.30.2
+2.31.1
 
 
-From 14ae7496ee64ed6404547eb9407286e61beab2e9 Mon Sep 17 00:00:00 2001
+From f1ba75377276560079af1d8f615380abd5fc9438 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 02/11] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -248,10 +248,10 @@ index 3ac99d7ec04f..2c6f668142c3 100644
  }
  
 -- 
-2.30.2
+2.31.1
 
 
-From b819404f9d677e82f350ce4943e60af142bec07b Mon Sep 17 00:00:00 2001
+From 5c825104d44100b72d98cf02ea0751065576af4e Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 03/11] Test the notification-received signal
@@ -315,10 +315,10 @@ index 37d51c6b8963..73810251a4d0 100644
          if (options.no_double_buffer) {
                  G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
 -- 
-2.30.2
+2.31.1
 
 
-From 68c344a66996e3845db55994e25413c97a809504 Mon Sep 17 00:00:00 2001
+From aa647920fe6dc8ee0f4d23d8d90bafc649d01efe Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 04/11] Add a property to configure the scroll speed
@@ -408,7 +408,7 @@ index 668a7dbeae96..0143f0b9dd4d 100644
  _VTE_PUBLIC
  void vte_terminal_set_scrollback_lines(VteTerminal *terminal,
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index 8c31a2895886..d73f1ce05680 100644
+index e3274ff3df90..b4bcd3d9a1d5 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -758,6 +758,9 @@ try
@@ -523,10 +523,10 @@ index 38aaf421ec30..fd1a8b9008cf 100644
          bool set_fallback_scrolling(bool set);
          auto fallback_scrolling() const noexcept { return m_fallback_scrolling; }
 -- 
-2.30.2
+2.31.1
 
 
-From cb8b9297bfdf7dd3ff49c01bb9bdfa2122f9ef63 Mon Sep 17 00:00:00 2001
+From f080a7417f8f657778916219ad06ab184c53ff9a Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 05/11] Test the scroll-speed property
@@ -596,10 +596,10 @@ index 73810251a4d0..90421730a66a 100644
          vte_terminal_set_text_blink_mode(window->terminal, options.text_blink_mode);
  
 -- 
-2.30.2
+2.31.1
 
 
-From 9ae40f1485bd6dc4468c59dc6b1474b06053933c Mon Sep 17 00:00:00 2001
+From b77827bf39fcf7b27f548a5472802371196801d3 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 06/11] Support preexec notifications from an interactive shell
@@ -674,7 +674,7 @@ index 0143f0b9dd4d..2d1017f4a216 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index d73f1ce05680..f78b168a0a7c 100644
+index b4bcd3d9a1d5..ce95126b37b8 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -990,6 +990,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
@@ -749,10 +749,10 @@ index 7ab65b6d204a..51ca37bdc748 100644
  
  bool
 -- 
-2.30.2
+2.31.1
 
 
-From f7b0c02b216b492c928fcb314dcef9a248e6a042 Mon Sep 17 00:00:00 2001
+From d2e780db838ead280cf5657c49b0d63dd0683f5f Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
 Subject: [PATCH 07/11] Test the shell-preexec signal
@@ -814,10 +814,10 @@ index 90421730a66a..3caec42e5877 100644
          /* Settings */
          if (options.no_double_buffer) {
 -- 
-2.30.2
+2.31.1
 
 
-From 63930c9a1e3e8cade091332c0499edf692cc91ae Mon Sep 17 00:00:00 2001
+From 949d4552c4ab66e02ba03024091f21bd35c199d8 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
 Subject: [PATCH 08/11] Support precmd notifications from an interactive shell
@@ -893,7 +893,7 @@ index 2d1017f4a216..5e413393f7ec 100644
          VteTerminalClassPrivate *priv;
  };
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index f78b168a0a7c..bd6c0d7d2777 100644
+index ce95126b37b8..a84f17e21f65 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -990,6 +990,7 @@ vte_terminal_class_init(VteTerminalClass *klass)
@@ -968,10 +968,10 @@ index 51ca37bdc748..10b494bddb47 100644
          }
  }
 -- 
-2.30.2
+2.31.1
 
 
-From 65d93ad126528ad50c652afd7b5ab3dd1cf65dc5 Mon Sep 17 00:00:00 2001
+From 28518832a97fc3ff2760de36cc13586c12555b62 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
 Subject: [PATCH 09/11] Test the shell-precmd signal
@@ -1033,10 +1033,10 @@ index 3caec42e5877..0ae59d2526cb 100644
  
          /* Settings */
 -- 
-2.30.2
+2.31.1
 
 
-From 1c5cf64a59cf6570af701abeb8b866aac4ed3627 Mon Sep 17 00:00:00 2001
+From e1c687e0651c06b72c7197e9f8f4a91122e8451c Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Mon, 10 Jun 2019 20:30:18 +0200
 Subject: [PATCH 10/11] Support tracking the active container inside the
@@ -1112,7 +1112,7 @@ index 5e413393f7ec..32b2f32eef9d 100644
  _VTE_PUBLIC
  const char *vte_terminal_get_current_file_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
 diff --git a/src/vtegtk.cc b/src/vtegtk.cc
-index bd6c0d7d2777..ec4322d980c4 100644
+index a84f17e21f65..aa3f04c6a02a 100644
 --- a/src/vtegtk.cc
 +++ b/src/vtegtk.cc
 @@ -707,6 +707,12 @@ try
@@ -1383,10 +1383,10 @@ index 10b494bddb47..2a2ba4b47441 100644
                  ++token;
  
 -- 
-2.30.2
+2.31.1
 
 
-From 19e61e25e05e1c7ee7b8b8bc586af40fc5d8cc9d Mon Sep 17 00:00:00 2001
+From 4a949461c975c2d062703e161f337d84f13a60d7 Mon Sep 17 00:00:00 2001
 From: Kalev Lember <klember@redhat.com>
 Date: Tue, 16 Feb 2021 16:30:44 +0100
 Subject: [PATCH 11/11] Revert "widget: Limit select-all to the writable region
@@ -1429,5 +1429,5 @@ index abd6b449ae48..99ad5973c363 100644
  	_vte_debug_print(VTE_DEBUG_SELECTION, "Selecting *all* text.\n");
  
 -- 
-2.30.2
+2.31.1
 
