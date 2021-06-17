@@ -11,10 +11,12 @@
 
 Name:           vte291
 Version:        0.64.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
-License:        LGPLv2+
+# libvte-2.91.so is generated from LGPLv2+ and MIT sources
+License:        LGPLv3+ and MIT
+
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
 Source0:        https://download.gnome.org/sources/vte/0.64/vte-%{version}.tar.xz
 
@@ -61,6 +63,11 @@ console/terminal in games, editors, IDEs, etc.
 
 %package        devel
 Summary:        Development files for %{name}
+
+# vte-2.91 is generated from GPLv3+ sources, while the public headers are
+# LGPLv3+
+License:        GPLv3+ and LGPLv3+
+
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -99,12 +106,14 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %find_lang vte-%{apiver}
 
 %files -f vte-%{apiver}.lang
-%license COPYING.GPL3
+%license COPYING.LGPL3
+%license COPYING.XTERM
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
 %{_userunitdir}/vte-spawn-.scope.d
 
 %files devel
+%license COPYING.GPL3
 %{_bindir}/vte-%{apiver}
 %{_includedir}/vte-%{apiver}/
 %{_libdir}/libvte-%{apiver}.so
@@ -115,11 +124,15 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_datadir}/vala/
 
 %files -n vte-profile
+%license COPYING.GPL3
 %{_libexecdir}/vte-urlencode-cwd
 %{_sysconfdir}/profile.d/vte.csh
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Thu Jun 17 2021 Debarshi Ray <rishi@fedoraproject.org> - 0.64.2-2
+- Fix the License fields and ship the correct license texts
+
 * Wed Jun 16 2021 Debarshi Ray <rishi@fedoraproject.org> - 0.64.2-1
 - Update to 0.64.2
 
