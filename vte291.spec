@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.64.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
@@ -130,6 +130,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.64.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Thu Jun 17 2021 Debarshi Ray <rishi@fedoraproject.org> - 0.64.2-2
 - Fix the License fields and ship the correct license texts
 
