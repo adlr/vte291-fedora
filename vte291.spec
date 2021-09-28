@@ -10,37 +10,39 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.64.2
-Release:        3%{?dist}
+Version:        0.66.0
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
 License:        LGPLv3+ and MIT
 
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
-Source0:        https://download.gnome.org/sources/vte/0.64/vte-%{version}.tar.xz
+Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{version}.tar.bz2
 
+Patch0:         vte-0.66.0-prompt-command.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 # https://pagure.io/fedora-workstation/issue/216
 Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
 
-BuildRequires:  gcc-c++
-BuildRequires:  gettext
 BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
 BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(glib-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(gnutls) >= %{gnutls_version}
 BuildRequires:  pkgconfig(gobject-2.0) >= %{glib2_version}
-BuildRequires:  gobject-introspection-devel
-BuildRequires:  gperf
-BuildRequires:  gtk-doc
-BuildRequires:  meson
 BuildRequires:  pkgconfig(gtk+-3.0) >= %{gtk3_version}
 BuildRequires:  pkgconfig(icu-uc) >= %{icu_uc_version}
 BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
 BuildRequires:  pkgconfig(libsystemd) >= %{libsystemd_version}
 BuildRequires:  pkgconfig(pango) >= %{pango_version}
+BuildRequires:  pkgconfig(zlib)
+BuildRequires:  gcc-c++
+BuildRequires:  gettext
+BuildRequires:  gobject-introspection-devel
+BuildRequires:  gperf
+BuildRequires:  gtk-doc
+BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  vala
 
@@ -89,8 +91,7 @@ The vte-profile package contains a profile.d script for the VTE terminal
 emulator library.
 
 %prep
-%setup -q -n vte-%{version}
-%patch100 -p1 -b .cntnr-precmd-preexec-scroll
+%autosetup -p1 -n vte-%{version}
 %if 0%{?flatpak}
 # Install user units where systemd macros expect them
 sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
@@ -108,6 +109,7 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %files -f vte-%{apiver}.lang
 %license COPYING.LGPL3
 %license COPYING.XTERM
+%doc README.md
 %{_libdir}/libvte-%{apiver}.so.0*
 %{_libdir}/girepository-1.0/
 %{_userunitdir}/vte-spawn-.scope.d
@@ -130,6 +132,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Tue Sep 28 2021 David King <amigadave@amigadave.com> - 0.66.0-1
+- Update to 0.66.0
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.64.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
