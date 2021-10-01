@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.66.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
@@ -53,7 +53,7 @@ Requires:       gtk3%{?_isa} >= %{gtk3_version}
 Requires:       libicu%{?_isa} >= %{icu_uc_version}
 Requires:       pango >= %{pango_version}
 Requires:       pcre2%{?_isa} >= %{pcre2_version}
-Requires:       systemd >= %{libsystemd_version}
+Requires:       systemd-libs%{?_isa} >= %{libsystemd_version}
 Requires:       vte-profile
 
 Conflicts:      gnome-terminal < 3.20.1-2
@@ -132,6 +132,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Fri Oct 01 2021 Kalev Lember <klember@redhat.com> - 0.66.0-2
+- Require systemd-libs rather than systemd
+
 * Tue Sep 28 2021 David King <amigadave@amigadave.com> - 0.66.0-1
 - Update to 0.66.0
 
