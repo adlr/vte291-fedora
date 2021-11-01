@@ -1,4 +1,4 @@
-From faa4340a6dc1df505d331eda732c094645bd3863 Mon Sep 17 00:00:00 2001
+From baa3752d4479336135d199b83ac3016fd1f71918 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 01/11] Add sequences and signals for desktop notification
@@ -212,10 +212,10 @@ index 0a45c9b4..1a6bdc11 100644
          default:
                  break;
 -- 
-2.32.0
+2.33.1
 
 
-From 08aaeb7060411e91f142f928950d01af121e823a Mon Sep 17 00:00:00 2001
+From 8cb45a1e47b4406343f5748bbedad3f694c36b60 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
 Subject: [PATCH 02/11] vte.sh: Emit OSC 777 from PROMPT_COMMAND
@@ -248,10 +248,10 @@ index 242d6c42..50242223 100644
  }
  
 -- 
-2.32.0
+2.33.1
 
 
-From 1f3aa3194edb4d98ff83836e2f9151960314c040 Mon Sep 17 00:00:00 2001
+From bb722e49ee14906def24bac9bd0d4e594d71a3ce Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
 Subject: [PATCH 03/11] Test the notification-received signal
@@ -287,11 +287,11 @@ index 8ab27e5a..025f971b 100644
  
  class App : Gtk.Application
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 86135abe..e5f67cd9 100644
+index 3beff861..00a3e3b2 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -2208,6 +2208,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
- #endif
+@@ -2205,6 +2205,14 @@ window_window_title_changed_cb(VteTerminal* terminal,
+         gtk_window_set_title(GTK_WINDOW(window), title && title[0] ? title : "Terminal");
  }
  
 +static void
@@ -305,7 +305,7 @@ index 86135abe..e5f67cd9 100644
  static void
  window_lower_window_cb(VteTerminal* terminal,
                         VteappWindow* window)
-@@ -2503,6 +2511,8 @@ vteapp_window_constructed(GObject *object)
+@@ -2501,6 +2509,8 @@ vteapp_window_constructed(GObject *object)
          if (options.object_notifications)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
@@ -315,10 +315,10 @@ index 86135abe..e5f67cd9 100644
  #if VTE_GTK == 3
          if (options.no_double_buffer) {
 -- 
-2.32.0
+2.33.1
 
 
-From 67f64a50e3671e50e6cf82f7f69ed1543253a019 Mon Sep 17 00:00:00 2001
+From 005e6d651cddca7145ca895a3ddf0bd19764454f Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
 Subject: [PATCH 04/11] Add a property to configure the scroll speed
@@ -523,10 +523,10 @@ index b4dfb2a4..2da56ebd 100644
          bool set_fallback_scrolling(bool set);
          auto fallback_scrolling() const noexcept { return m_fallback_scrolling; }
 -- 
-2.32.0
+2.33.1
 
 
-From 7c7ab09278605488a2710eac246842d646e0cfc7 Mon Sep 17 00:00:00 2001
+From dd4f63266f88bcb403513e14fc84e61a2a8e0656 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
 Subject: [PATCH 05/11] Test the scroll-speed property
@@ -567,10 +567,10 @@ index 025f971b..51b5d641 100644
          "Specify the number of scrollback-lines", null },
        { "transparent", 'T', 0, OptionArg.INT, ref transparency_percent,
 diff --git a/src/app/app.cc b/src/app/app.cc
-index e5f67cd9..e812416c 100644
+index 00a3e3b2..a6f209bb 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -115,6 +115,7 @@ public:
+@@ -116,6 +116,7 @@ public:
          int verbosity{0};
          double cell_height_scale{1.0};
          double cell_width_scale{1.0};
@@ -578,7 +578,7 @@ index e5f67cd9..e812416c 100644
          VteCursorBlinkMode cursor_blink_mode{VTE_CURSOR_BLINK_SYSTEM};
          VteCursorShape cursor_shape{VTE_CURSOR_SHAPE_BLOCK};
          VteTextBlinkMode text_blink_mode{VTE_TEXT_BLINK_ALWAYS};
-@@ -617,6 +618,8 @@ public:
+@@ -618,6 +619,8 @@ public:
                            "Reverse foreground/background colors", nullptr },
                          { "require-systemd-scope", 0, 0, G_OPTION_ARG_NONE, &require_systemd_scope,
                            "Require use of a systemd user scope", nullptr },
@@ -587,7 +587,7 @@ index e5f67cd9..e812416c 100644
                          { "scroll-unit-is-pixels", 0, 0, G_OPTION_ARG_NONE, &scroll_unit_is_pixels,
                            "Use pixels as scroll unit", nullptr },
                          { "scrollback-lines", 'n', 0, G_OPTION_ARG_INT, &scrollback_lines,
-@@ -2547,6 +2550,7 @@ vteapp_window_constructed(GObject *object)
+@@ -2545,6 +2548,7 @@ vteapp_window_constructed(GObject *object)
          vte_terminal_set_rewrap_on_resize(window->terminal, !options.no_rewrap);
          vte_terminal_set_scroll_on_output(window->terminal, false);
          vte_terminal_set_scroll_on_keystroke(window->terminal, true);
@@ -596,10 +596,10 @@ index e5f67cd9..e812416c 100644
          vte_terminal_set_scrollback_lines(window->terminal, options.scrollback_lines);
          vte_terminal_set_text_blink_mode(window->terminal, options.text_blink_mode);
 -- 
-2.32.0
+2.33.1
 
 
-From fb7db8f86848dc7ad6ea585d3211e935603d1aa9 Mon Sep 17 00:00:00 2001
+From 145bbaedfe0dbd2102ca38acff53e749666c612a Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
 Subject: [PATCH 06/11] Support preexec notifications from an interactive shell
@@ -752,10 +752,10 @@ index 1a6bdc11..84341cda 100644
  
  bool
 -- 
-2.32.0
+2.33.1
 
 
-From 4a699bf2ff119c9267faeac81b4db9421b782837 Mon Sep 17 00:00:00 2001
+From a6b24e55d1da9ffc35defa6c4d4cb4b16fc50814 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
 Subject: [PATCH 07/11] Test the shell-preexec signal
@@ -792,10 +792,10 @@ index 51b5d641..3975b988 100644
  
  class App : Gtk.Application
 diff --git a/src/app/app.cc b/src/app/app.cc
-index e812416c..498db5a4 100644
+index a6f209bb..002db773 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -2219,6 +2219,12 @@ notification_received_cb(VteTerminal *terminal,
+@@ -2216,6 +2216,12 @@ notification_received_cb(VteTerminal *terminal,
          g_print("[%s]: %s\n", summary, body);
  }
  
@@ -808,7 +808,7 @@ index e812416c..498db5a4 100644
  static void
  window_lower_window_cb(VteTerminal* terminal,
                         VteappWindow* window)
-@@ -2515,6 +2521,7 @@ vteapp_window_constructed(GObject *object)
+@@ -2513,6 +2519,7 @@ vteapp_window_constructed(GObject *object)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
          g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
@@ -817,10 +817,10 @@ index e812416c..498db5a4 100644
          /* Settings */
  #if VTE_GTK == 3
 -- 
-2.32.0
+2.33.1
 
 
-From 84f18bd4d3f1a2fcbc68041bcbcfdcf43a34d76a Mon Sep 17 00:00:00 2001
+From a21192aa95629c59fdf1ca2e214b194ceac34fa0 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
 Subject: [PATCH 08/11] Support precmd notifications from an interactive shell
@@ -971,10 +971,10 @@ index 84341cda..35eff3dd 100644
          }
  }
 -- 
-2.32.0
+2.33.1
 
 
-From b8c3a454e8a3dec36f1eaab960dfebca8d7100a6 Mon Sep 17 00:00:00 2001
+From 92f19ab6d981507e6d348c45802701e7cd8b0503 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
 Subject: [PATCH 09/11] Test the shell-precmd signal
@@ -1011,10 +1011,10 @@ index 3975b988..ff5fb5df 100644
    {
      print("[shell] executing command\n");
 diff --git a/src/app/app.cc b/src/app/app.cc
-index 498db5a4..8cf66f88 100644
+index 002db773..dde27c9a 100644
 --- a/src/app/app.cc
 +++ b/src/app/app.cc
-@@ -2219,6 +2219,12 @@ notification_received_cb(VteTerminal *terminal,
+@@ -2216,6 +2216,12 @@ notification_received_cb(VteTerminal *terminal,
          g_print("[%s]: %s\n", summary, body);
  }
  
@@ -1027,7 +1027,7 @@ index 498db5a4..8cf66f88 100644
  static void
  shell_preexec_cb(VteTerminal *terminal)
  {
-@@ -2521,6 +2527,7 @@ vteapp_window_constructed(GObject *object)
+@@ -2519,6 +2525,7 @@ vteapp_window_constructed(GObject *object)
                  g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
  
          g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
@@ -1036,10 +1036,10 @@ index 498db5a4..8cf66f88 100644
  
          /* Settings */
 -- 
-2.32.0
+2.33.1
 
 
-From 4490f0a4648d6ed359447b2f817aa47b475e093f Mon Sep 17 00:00:00 2001
+From 66afaa0b1eae0d55264068aadf689cd2d23d00a3 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Mon, 10 Jun 2019 20:30:18 +0200
 Subject: [PATCH 10/11] Support tracking the active container inside the
@@ -1386,10 +1386,10 @@ index 35eff3dd..d0f206be 100644
                  ++token;
  
 -- 
-2.32.0
+2.33.1
 
 
-From 7a296e18eb249bf872f3a50f0ab47a4d91324a44 Mon Sep 17 00:00:00 2001
+From 70c33c909b2ded3536a0f318c503df27bbd94722 Mon Sep 17 00:00:00 2001
 From: Kalev Lember <klember@redhat.com>
 Date: Tue, 16 Feb 2021 16:30:44 +0100
 Subject: [PATCH 11/11] Revert "widget: Limit select-all to the writable region
@@ -1432,5 +1432,5 @@ index d32e8eb7..aa246e5e 100644
  	_vte_debug_print(VTE_DEBUG_SELECTION, "Selecting *all* text.\n");
  
 -- 
-2.32.0
+2.33.1
 

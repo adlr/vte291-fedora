@@ -10,8 +10,8 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.66.0
-Release:        2%{?dist}
+Version:        0.66.1
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
@@ -20,11 +20,10 @@ License:        LGPLv3+ and MIT
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
 Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{version}.tar.bz2
 
-Patch0:         vte-0.66.0-prompt-command.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 # https://pagure.io/fedora-workstation/issue/216
-Patch100:       vte291-cntnr-precmd-preexec-scroll.patch
+Patch0:         vte291-cntnr-precmd-preexec-scroll.patch
 
 BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
 BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
@@ -132,6 +131,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Nov 01 2021 David King <amigadave@amigadave.com> - 0.66.1-1
+- Update to 0.66.1
+
 * Fri Oct 01 2021 Kalev Lember <klember@redhat.com> - 0.66.0-2
 - Require systemd-libs rather than systemd
 
