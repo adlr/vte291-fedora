@@ -24,6 +24,8 @@ Source0:        https://download.gnome.org/sources/vte/0.66/vte-%{version}.tar.x
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 # https://pagure.io/fedora-workstation/issue/216
 Patch0:         vte291-cntnr-precmd-preexec-scroll.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=2047106
+Patch1:         vte291-0.66.2-vala-accessibility.patch
 
 BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
 BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
@@ -131,7 +133,7 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
-* Sat Jan 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 0.66.2-2
+* Thu Jan 27 2022 David King <amigadave@amigadave.com> - 0.66.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
 * Thu Dec 16 2021 David King <amigadave@amigadave.com> - 0.66.2-1
