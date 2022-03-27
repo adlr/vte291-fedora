@@ -10,7 +10,7 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.67.90
+Version:        0.68.0
 Release:        1%{?dist}
 Summary:        Terminal emulator library
 
@@ -18,7 +18,7 @@ Summary:        Terminal emulator library
 License:        LGPLv3+ and MIT
 
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
-Source0:        https://download.gnome.org/sources/vte/0.67/vte-%{version}.tar.xz
+Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{version}.tar.bz2
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
@@ -131,6 +131,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Sun Mar 27 2022 David King <amigadave@amigadave.com> - 0.68.0-1
+- Update to 0.68.0
+
 * Thu Feb 17 2022 David King <amigadave@amigadave.com> - 0.67.90-1
 - Update to 0.67.90
 

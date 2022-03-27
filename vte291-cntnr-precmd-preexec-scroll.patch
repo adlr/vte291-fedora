@@ -1,107 +1,7 @@
-From e723a6fa96bc50effbd046a2c2419cc51b3cc8c1 Mon Sep 17 00:00:00 2001
-From: Christian Persch <chpe@src.gnome.org>
-Date: Sat, 12 Feb 2022 21:10:08 +0100
-Subject: [PATCH 01/12] Revert "emulation: Support XTVERSION sequence"
-
-This reverts commit 0718a9a7f9300b2526eddb0fc74e25eef34795ba.
-
-Issue #235 shows commiting this was premature and there's more discussion needed.
----
- src/parser-reply.hh |  1 -
- src/parser-seq.py   |  2 --
- src/vteseq.cc       | 32 ++------------------------------
- 3 files changed, 2 insertions(+), 33 deletions(-)
-
-diff --git a/src/parser-reply.hh b/src/parser-reply.hh
-index c9046b1a..1ba3022a 100644
---- a/src/parser-reply.hh
-+++ b/src/parser-reply.hh
-@@ -57,7 +57,6 @@ _VTE_REPLY(DECCTR,      DCS, 's', NONE, CASH,  _VTE_REPLY_PARAMS({2})) /* color
- _VTE_REPLY(DECAUPSS,    DCS, 'u', NONE, BANG,  ) /* assign user preferred supplemental set */
- _VTE_REPLY(DECCIR,      DCS, 'u', NONE, CASH,  _VTE_REPLY_PARAMS({1})) /* cursor information report */
- _VTE_REPLY(DECRPTUI,    DCS, '|', NONE, BANG,  _VTE_REPLY_STRING("7E565445") /* "~VTE" */) /* report terminal unit ID */
--_VTE_REPLY(XTERM_DSR,   DCS, '|', GT,   NONE,  ) /* xterm terminal version report */
- _VTE_REPLY(DECRPFK,     DCS, '}', NONE, DQUOTE,) /* report function key */
- _VTE_REPLY(DECCKSR,     DCS, '~', NONE, BANG,  ) /* memory checksum report */
- _VTE_REPLY(DECRPAK,     DCS, '~', NONE, DQUOTE,) /* report all modifiers/alphanumeric key */
-diff --git a/src/parser-seq.py b/src/parser-seq.py
-index c484c0ac..8692b147 100755
---- a/src/parser-seq.py
-+++ b/src/parser-seq.py
-@@ -756,8 +756,6 @@ sequences = [
-             comment='select terminal id'),
-     seq_CSI('DECCRTST', 'q', intermediates=(Intermediate.MINUS,), flags=Flags.NOP,
-             comment='CRT saver time'),
--    seq_CSI('XTERM_VERSION', 'q', pintro=(ParameterIntro.GT,),
--            comment='request xterm version report'),
-     seq_CSI('DECSTBM', 'r',
-             comment='set top and bottom margins'),
-     seq_CSI('DECSKCV', 'r', intermediates=(Intermediate.SPACE,), flags=Flags.NOP,
-diff --git a/src/vteseq.cc b/src/vteseq.cc
-index 007ddb69..874d2405 100644
---- a/src/vteseq.cc
-+++ b/src/vteseq.cc
-@@ -69,11 +69,6 @@ enum {
-         VTE_SGR_COLOR_SPEC_LEGACY = 5
- };
- 
--inline constexpr int firmware_version() noexcept
--{
--        return (VTE_MAJOR_VERSION * 100 + VTE_MINOR_VERSION) * 100 + VTE_MICRO_VERSION;
--}
--
- void
- vte::parser::Sequence::print() const noexcept
- {
-@@ -2410,7 +2405,8 @@ Terminal::DA2(vte::parser::Sequence const& seq)
-         if (seq.collect1(0, 0) != 0)
-                 return;
- 
--        reply(seq, VTE_REPLY_DECDA2R, {65, firmware_version(), 1});
-+        int const version = (VTE_MAJOR_VERSION * 100 + VTE_MINOR_VERSION) * 100 + VTE_MICRO_VERSION;
-+        reply(seq, VTE_REPLY_DECDA2R, {65, version, 1});
- }
- 
- void
-@@ -8848,30 +8844,6 @@ Terminal::XTERM_STCAP(vte::parser::Sequence const& seq)
-          */
- }
- 
--void
--Terminal::XTERM_VERSION(vte::parser::Sequence const& seq)
--{
--        /*
--         * XTERM_VERSION - xterm request version report
--         *
--         * Returns the xterm name and version as XTERM_DSR.
--         *
--         * Arguments:
--         *   args[0]: select function
--         *     0: report xterm name and version
--         *
--         * Defaults:
--         *   args[0]: no defaults
--         *
--         * References: XTERM
--         */
--
--        if (seq.collect1(0) != 0)
--                return;
--
--        reply(seq, VTE_REPLY_XTERM_DSR, {}, "VTE(%d)", firmware_version());
--}
--
- void
- Terminal::XTERM_WM(vte::parser::Sequence const& seq)
- {
--- 
-2.35.1
-
-
-From 90c5ba23a1fca5553c453f07ec010700eb2c70f2 Mon Sep 17 00:00:00 2001
+From c809170f42582f3f02fbcc10e5157ebae9efd0ce Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
-Subject: [PATCH 02/12] Add sequences and signals for desktop notification
+Subject: [PATCH 01/11] Add sequences and signals for desktop notification
 
 Add sequences
   OSC 777 ; notify ; SUMMARY ; BODY BEL
@@ -317,10 +217,10 @@ index 874d2405..537e8e13 100644
 2.35.1
 
 
-From 4f2b191321033a1ac5ee49f10bf7290b07dc0af1 Mon Sep 17 00:00:00 2001
+From 05a642746f1c3985ea204571e0179a1147dda1a9 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 29 Jan 2015 13:09:17 +0100
-Subject: [PATCH 03/12] vte.sh: Emit OSC 777 from PROMPT_COMMAND
+Subject: [PATCH 02/11] vte.sh: Emit OSC 777 from PROMPT_COMMAND
 
 For some reason, the three consecutive backslashes break the parsing.
 As Christian Persch suggested, replacing the double quotes with
@@ -353,10 +253,10 @@ index 242d6c42..50242223 100644
 2.35.1
 
 
-From 1481641c0596217b6ca7f73243a5c5048202e10b Mon Sep 17 00:00:00 2001
+From d0cca4421d0108b0f9e23ea03ea5e99f745646a6 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Thu, 22 Jan 2015 16:37:10 +0100
-Subject: [PATCH 04/12] Test the notification-received signal
+Subject: [PATCH 03/11] Test the notification-received signal
 
 ---
  bindings/vala/app.vala |  7 +++++++
@@ -420,10 +320,10 @@ index 3b7835aa..fc8220a5 100644
 2.35.1
 
 
-From e86c937f6d8f03930d97b942a13df4acd9bef92a Mon Sep 17 00:00:00 2001
+From e87bc628fdecf7480c12b861ba3fb98b03abe4d9 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:53:54 +0200
-Subject: [PATCH 05/12] Add a property to configure the scroll speed
+Subject: [PATCH 04/11] Add a property to configure the scroll speed
 
 By default, it is set to zero which gives the current behaviour of
 moving the buffer by a function of the number of visible rows.
@@ -628,10 +528,10 @@ index 69a32276..d3e25179 100644
 2.35.1
 
 
-From a1da65e5390c1dfdd201a29c912181712de2e9d6 Mon Sep 17 00:00:00 2001
+From f8a8d2adf1000720f269adb80473e8971bc51135 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 13 May 2016 17:54:57 +0200
-Subject: [PATCH 06/12] Test the scroll-speed property
+Subject: [PATCH 05/11] Test the scroll-speed property
 
 https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 ---
@@ -701,10 +601,10 @@ index fc8220a5..c6f5cc0b 100644
 2.35.1
 
 
-From f7fafa786a3b6e5568eefab7ad318594813aa4d5 Mon Sep 17 00:00:00 2001
+From 60d5670e793d2aa2ccda489e4e468bbc9c120908 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 7 Jan 2015 16:01:00 +0100
-Subject: [PATCH 07/12] Support preexec notifications from an interactive shell
+Subject: [PATCH 06/11] Support preexec notifications from an interactive shell
 
 Add sequences
   OSC 777 ; preexec BEL
@@ -859,10 +759,10 @@ index 537e8e13..dbc6276f 100644
 2.35.1
 
 
-From 9921679046106711276fe5304bc2d04b71553dec Mon Sep 17 00:00:00 2001
+From 9fe74c4f17f1fb708a90f22a64fd2b5f4aa794a9 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Fri, 20 Apr 2018 18:21:53 +0200
-Subject: [PATCH 08/12] Test the shell-preexec signal
+Subject: [PATCH 07/11] Test the shell-preexec signal
 
 https://bugzilla.gnome.org/show_bug.cgi?id=711059
 https://bugzilla.gnome.org/show_bug.cgi?id=711060
@@ -924,10 +824,10 @@ index c6f5cc0b..33a9481e 100644
 2.35.1
 
 
-From 9a9c9b064447d50b0ebcd4c87284f68dc5414158 Mon Sep 17 00:00:00 2001
+From ed2a83fbf034f79f7c08e8d5e4eeaaea2599e484 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:20:30 +0200
-Subject: [PATCH 09/12] Support precmd notifications from an interactive shell
+Subject: [PATCH 08/11] Support precmd notifications from an interactive shell
 
 Add sequences
   OSC 777 ; precmd BEL
@@ -1081,10 +981,10 @@ index dbc6276f..4de2a6f1 100644
 2.35.1
 
 
-From 5a57ad11947fbffc2c70a46e4e99941fc9e7b22a Mon Sep 17 00:00:00 2001
+From 2f3ea5834f7ae8c946724c3aef05964383088ec0 Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Wed, 2 May 2018 17:30:48 +0200
-Subject: [PATCH 10/12] Test the shell-precmd signal
+Subject: [PATCH 09/11] Test the shell-precmd signal
 
 https://bugzilla.gnome.org/show_bug.cgi?id=711059
 https://bugzilla.gnome.org/show_bug.cgi?id=711060
@@ -1146,10 +1046,10 @@ index 33a9481e..d30f8bd7 100644
 2.35.1
 
 
-From 5626cd2154d3c8ce63f679d876468ca776cc2279 Mon Sep 17 00:00:00 2001
+From 08d50a8599dad3ac60f54cb0aeeadb3ca26c214d Mon Sep 17 00:00:00 2001
 From: Debarshi Ray <debarshir@gnome.org>
 Date: Mon, 10 Jun 2019 20:30:18 +0200
-Subject: [PATCH 11/12] Support tracking the active container inside the
+Subject: [PATCH 10/11] Support tracking the active container inside the
  terminal
 
 Add sequences
@@ -1496,10 +1396,10 @@ index 4de2a6f1..18c0d89c 100644
 2.35.1
 
 
-From 00055475b4238ed9089faf745ba56e652f97bbc3 Mon Sep 17 00:00:00 2001
+From 62df90e5147c8be4e12bcf5ce99679c1fb2390d0 Mon Sep 17 00:00:00 2001
 From: Kalev Lember <klember@redhat.com>
 Date: Tue, 16 Feb 2021 16:30:44 +0100
-Subject: [PATCH 12/12] Revert "widget: Limit select-all to the writable region
+Subject: [PATCH 11/11] Revert "widget: Limit select-all to the writable region
  not including the scrollback"
 
 ... as decided by Fedora Workstation WG.
