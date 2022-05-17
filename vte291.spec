@@ -11,7 +11,7 @@
 
 Name:           vte291
 Version:        0.68.0
-Release:        1%{?dist}
+Release:        1%{?dist}.adlr
 Summary:        Terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
@@ -24,6 +24,7 @@ Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{ve
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 # https://pagure.io/fedora-workstation/issue/216
 Patch0:         vte291-cntnr-precmd-preexec-scroll.patch
+Patch1:         vte291-selection-copies-to-clipboard.patch
 
 BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
 BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
