@@ -10,20 +10,22 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.68.0
-Release:        3%{?dist}
+Version:        0.69.90
+Release:        1%{?dist}
 Summary:        Terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
 License:        LGPLv3+ and MIT
 
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
-Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{version}.tar.bz2
+Source0:        https://download.gnome.org/sources/vte/0.69/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 # https://pagure.io/fedora-workstation/issue/216
 Patch0:         vte291-cntnr-precmd-preexec-scroll.patch
+
+Patch1:         vte291-0.69.90-fix-toml-docdir.patch
 
 BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
 BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
@@ -38,9 +40,9 @@ BuildRequires:  pkgconfig(pango) >= %{pango_version}
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  gcc-c++
 BuildRequires:  gettext
+BuildRequires:  gi-docgen
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  gperf
-BuildRequires:  gtk-doc
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  vala
@@ -121,7 +123,7 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_libdir}/pkgconfig/vte-%{apiver}.pc
 %{_datadir}/gir-1.0/
 %{_datadir}/glade/
-%doc %{_datadir}/gtk-doc/
+%doc %{_docdir}/vte-2.91/
 %{_datadir}/vala/
 
 %files -n vte-profile
@@ -131,6 +133,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Wed Aug 03 2022 David King <amigadave@amigadave.com> - 0.69.90-1
+- Update to 0.69.90
+
 * Mon Aug 01 2022 Frantisek Zatloukal <fzatlouk@redhat.com> - 0.68.0-3
 - Rebuilt for ICU 71.1
 
