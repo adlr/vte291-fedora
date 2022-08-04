@@ -4,6 +4,7 @@
 %global glib2_version 2.52.0
 %global gnutls_version 3.2.7
 %global gtk3_version 3.24.22
+%global gtk4_version 4.0.1
 %global icu_uc_version 4.8
 %global libsystemd_version 220
 %global pango_version 1.22.0
@@ -12,7 +13,7 @@
 Name:           vte291
 Version:        0.69.90
 Release:        1%{?dist}
-Summary:        Terminal emulator library
+Summary:        GTK+ 3 terminal emulator library
 
 # libvte-2.91.so is generated from LGPLv2+ and MIT sources
 License:        LGPLv3+ and MIT
@@ -33,6 +34,7 @@ BuildRequires:  pkgconfig(glib-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(gnutls) >= %{gnutls_version}
 BuildRequires:  pkgconfig(gobject-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(gtk+-3.0) >= %{gtk3_version}
+BuildRequires:  pkgconfig(gtk4) >= %{gtk4_version}
 BuildRequires:  pkgconfig(icu-uc) >= %{icu_uc_version}
 BuildRequires:  pkgconfig(libpcre2-8) >= %{pcre2_version}
 BuildRequires:  pkgconfig(libsystemd) >= %{libsystemd_version}
@@ -64,8 +66,21 @@ VTE is a library implementing a terminal emulator widget for GTK+. VTE
 is mainly used in gnome-terminal, but can also be used to embed a
 console/terminal in games, editors, IDEs, etc.
 
+%package        gtk4
+Summary:        GTK4 terminal emulator library
+
+# libvte-2.91.so is generated from LGPLv2+ and MIT sources
+License:        LGPLv3+ and MIT
+
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description gtk4
+VTE is a library implementing a terminal emulator widget for GTK 4. VTE
+is mainly used in gnome-terminal, but can also be used to embed a
+console/terminal in games, editors, IDEs, etc.
+
 %package        devel
-Summary:        Development files for %{name}
+Summary:        Development files for GTK+ 3 %{name}
 
 # vte-2.91 is generated from GPLv3+ sources, while the public headers are
 # LGPLv3+
@@ -75,7 +90,21 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
-developing applications that use %{name}.
+developing GTK+ 3 applications that use %{name}.
+
+%package        gtk4-devel
+Summary:        Development files for GTK 4 %{name}
+
+# vte-2.91 is generated from GPLv3+ sources, while the public headers are
+# LGPLv3+
+License:        GPLv3+ and LGPLv3+
+
+Requires:       %{name}-gtk4%{?_isa} = %{version}-%{release}
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
+
+%description gtk4-devel
+The %{name}-gtk4-devel package contains libraries and header files for
+developing GTK 4 applications that use %{name}.
 
 # vte-profile is deliberately not noarch to avoid having to obsolete a noarch
 # subpackage in the future when we get rid of the vte3 / vte291 split. Yum is
@@ -99,7 +128,7 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %endif
 
 %build
-%meson --buildtype=plain -Ddocs=true
+%meson --buildtype=plain -Ddocs=true -Dgtk3=true -Dgtk4=true
 %meson_build
 
 %install
@@ -112,8 +141,13 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %license COPYING.XTERM
 %doc README.md
 %{_libdir}/libvte-%{apiver}.so.0*
-%{_libdir}/girepository-1.0/
+%dir %{_libdir}/girepository-1.0
+%{_libdir}/girepository-1.0/Vte-2.91.typelib
 %{_userunitdir}/vte-spawn-.scope.d
+
+%files gtk4
+%{_libdir}/libvte-%{apiver}-gtk4.so.0*
+%{_libdir}/girepository-1.0/Vte-3.91.typelib
 
 %files devel
 %license COPYING.GPL3
@@ -121,10 +155,24 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_includedir}/vte-%{apiver}/
 %{_libdir}/libvte-%{apiver}.so
 %{_libdir}/pkgconfig/vte-%{apiver}.pc
-%{_datadir}/gir-1.0/
+%dir %{_datadir}/gir-1.0
+%{_datadir}/gir-1.0/Vte-2.91.gir
 %{_datadir}/glade/
 %doc %{_docdir}/vte-2.91/
-%{_datadir}/vala/
+%dir %{_datadir}/vala
+%dir %{_datadir}/vala/vapi
+%{_datadir}/vala/vapi/vte-2.91.deps
+%{_datadir}/vala/vapi/vte-2.91.vapi
+
+%files gtk4-devel
+%{_bindir}/vte-%{apiver}-gtk4
+%{_includedir}/vte-%{apiver}-gtk4/
+%{_libdir}/libvte-%{apiver}-gtk4.so
+%{_libdir}/pkgconfig/vte-%{apiver}-gtk4.pc
+%{_datadir}/gir-1.0/Vte-3.91.gir
+%doc %{_docdir}/vte-2.91-gtk4/
+%{_datadir}/vala/vapi/vte-2.91-gtk4.deps
+%{_datadir}/vala/vapi/vte-2.91-gtk4.vapi
 
 %files -n vte-profile
 %license COPYING.GPL3
@@ -135,6 +183,7 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %changelog
 * Wed Aug 03 2022 David King <amigadave@amigadave.com> - 0.69.90-1
 - Update to 0.69.90
+- Enable GTK4 support
 
 * Mon Aug 01 2022 Frantisek Zatloukal <fzatlouk@redhat.com> - 0.68.0-3
 - Rebuilt for ICU 71.1
