@@ -11,7 +11,7 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.69.90
+Version:        0.69.92
 Release:        1%{?dist}
 Summary:        GTK+ 3 terminal emulator library
 
@@ -19,14 +19,12 @@ Summary:        GTK+ 3 terminal emulator library
 License:        LGPLv3+ and MIT
 
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
-Source0:        https://download.gnome.org/sources/vte/0.69/vte-%{version}.tar.xz
+Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{version}.tar.bz2
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
 # https://pagure.io/fedora-workstation/issue/216
 Patch0:         vte291-cntnr-precmd-preexec-scroll.patch
-
-Patch1:         vte291-0.69.90-fix-toml-docdir.patch
 
 BuildRequires:  pkgconfig(fribidi) >= %{fribidi_version}
 BuildRequires:  pkgconfig(gio-2.0) >= %{glib2_version}
@@ -181,6 +179,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Aug 08 2022 Kalev Lember <klember@redhat.com> - 0.69.92-1
+- Update to 0.69.92
+
 * Wed Aug 03 2022 David King <amigadave@amigadave.com> - 0.69.90-1
 - Update to 0.69.90
 - Enable GTK4 support
