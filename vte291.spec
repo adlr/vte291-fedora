@@ -11,7 +11,7 @@
 %global pcre2_version 10.21
 
 Name:           vte291
-Version:        0.69.92
+Version:        0.70.0
 Release:        1%{?dist}
 Summary:        GTK+ 3 terminal emulator library
 
@@ -19,7 +19,7 @@ Summary:        GTK+ 3 terminal emulator library
 License:        LGPLv3+ and MIT
 
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
-Source0:        https://gitlab.gnome.org/GNOME/vte/-/archive/%{version}/vte-%{version}.tar.bz2
+Source0:        https://download.gnome.org/sources/vte/0.70/vte-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=711059
 # https://bugzilla.redhat.com/show_bug.cgi?id=1103380
@@ -179,6 +179,9 @@ sed -i -e "/^vte_systemduserunitdir =/s|vte_prefix|'/usr'|" meson.build
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon Sep 19 2022 Kalev Lember <klember@redhat.com> - 0.70.0-1
+- Update to 0.70.0
+
 * Mon Aug 08 2022 Kalev Lember <klember@redhat.com> - 0.69.92-1
 - Update to 0.69.92
 
